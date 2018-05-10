@@ -17,35 +17,57 @@ class HostSocket {
     private PrintWriter writer;
     private BufferedReader reader;
 
-    HostSocket(int port) {
-        this.port = port;
+    private DataListener listener;
 
-        this.startListening();
+    private Thread hostThread;
+
+    HostSocket(int port, DataListener listener) {
+        this.port = port;
+        this.listener = listener;
     }
 
-    private void startListening() {
-        Runnable hostTask = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    socket = new ServerSocket(port);
-                    client = socket.accept();
+    public boolean startListening() {
+        Runnable hostTask = () -> {
+            try {
+                socket = new ServerSocket(port);
+                client = socket.accept();
 
-                    writer = new PrintWriter(client.getOutputStream(), true);
-                    reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                writer = new PrintWriter(client.getOutputStream(), true);
+                reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-                    String data;
-                    while ((data = reader.readLine()) != null) {
-                        System.out.println(data);
-                    }
-                } catch (IOException ioe) {
-                    ioe.printStackTrace();
+                if(client.isConnected())
+                    listener.clientConnected();
+
+                String data;
+                while ((data = reader.readLine()) != null) {
+                    if(listener != null)
+                        listener.dataReceived(data);
                 }
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
             }
         };
 
+        try {
+            hostThread = new Thread(hostTask);
+            hostThread.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
 
-        Thread hostThread = new Thread(hostTask);
-        hostThread.start();
+        return true;
+    }
+
+    public void stopThread() {
+        hostThread.interrupt();
+    }
+
+    public boolean sendData(String data) {
+        if(this.socket == null || this.socket.isClosed())
+            return false;
+
+        writer.println(data);
+        return true;
     }
 }

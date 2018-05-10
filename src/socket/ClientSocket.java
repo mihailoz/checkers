@@ -12,41 +12,51 @@ class ClientSocket {
     private PrintWriter writer;
     private BufferedReader reader;
 
-    private ClientSocketListener listener;
+    private DataListener listener;
     private String hostname;
 
     private int port;
 
-    ClientSocket(String hostname, int port, ClientSocketListener listener) {
+    ClientSocket(String hostname, int port, DataListener listener) {
         this.hostname = hostname;
         this.port = port;
         this.listener = listener;
-
-        this.connect();
     }
 
-    private void connect() {
-        Runnable clientTask = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    socket = new Socket(hostname, port);
-                    writer = new PrintWriter(socket.getOutputStream(), true);
-                    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    public boolean connect() {
+        Runnable clientTask = () -> {
+            try {
+                socket = new Socket(hostname, port);
+                writer = new PrintWriter(socket.getOutputStream(), true);
+                reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-                    String data;
-                    while ((data = reader.readLine()) != null) {
-                        if(listener != null) {
-                            listener.dataReceived(data);
-                        }
+                String data;
+                while ((data = reader.readLine()) != null) {
+                    if(listener != null) {
+                        listener.dataReceived(data);
                     }
-                } catch (IOException ioe) {
-                    ioe.printStackTrace();
                 }
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
             }
         };
 
-        Thread clientThread = new Thread(clientTask);
-        clientThread.start();
+        try {
+            Thread clientThread = new Thread(clientTask);
+            clientThread.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean sendData(String data) {
+        if(this.socket == null || !this.socket.isConnected() || this.socket.isClosed())
+            return false;
+
+        writer.println(data);
+        return true;
     }
 }

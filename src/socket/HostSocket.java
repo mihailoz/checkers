@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class HostSocket {
+class HostSocket {
 
     private ServerSocket socket;
     private Socket client;
@@ -17,24 +17,35 @@ public class HostSocket {
     private PrintWriter writer;
     private BufferedReader reader;
 
-    public HostSocket(int port) throws IOException {
+    HostSocket(int port) {
         this.port = port;
 
         this.startListening();
     }
 
-    private void startListening() throws IOException {
-        socket = new ServerSocket(port);
-        client = socket.accept();
+    private void startListening() {
+        Runnable hostTask = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    socket = new ServerSocket(port);
+                    client = socket.accept();
 
-        writer = new PrintWriter(client.getOutputStream(), true);
-        reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                    writer = new PrintWriter(client.getOutputStream(), true);
+                    reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-        writer.println("EVO GA NEKI DATA BRE");
+                    String data;
+                    while ((data = reader.readLine()) != null) {
+                        System.out.println(data);
+                    }
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
+            }
+        };
 
-        String data;
-        while ((data = reader.readLine()) != null) {
-            System.out.println(data);
-        }
+
+        Thread hostThread = new Thread(hostTask);
+        hostThread.start();
     }
 }

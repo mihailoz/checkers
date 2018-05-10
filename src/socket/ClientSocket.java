@@ -17,7 +17,7 @@ class ClientSocket {
 
     private int port;
 
-    ClientSocket(String hostname, int port, ClientSocketListener listener) throws IOException {
+    ClientSocket(String hostname, int port, ClientSocketListener listener) {
         this.hostname = hostname;
         this.port = port;
         this.listener = listener;
@@ -25,16 +25,28 @@ class ClientSocket {
         this.connect();
     }
 
-    private void connect() throws IOException {
-        this.socket = new Socket(hostname, port);
-        this.writer = new PrintWriter(this.socket.getOutputStream(), true);
-        this.reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+    private void connect() {
+        Runnable clientTask = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    socket = new Socket(hostname, port);
+                    writer = new PrintWriter(socket.getOutputStream(), true);
+                    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-        String data;
-        while ((data = reader.readLine()) != null) {
-            if(listener != null) {
-                listener.dataReceived(data);
+                    String data;
+                    while ((data = reader.readLine()) != null) {
+                        if(listener != null) {
+                            listener.dataReceived(data);
+                        }
+                    }
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
             }
-        }
+        };
+
+        Thread clientThread = new Thread(clientTask);
+        clientThread.start();
     }
 }

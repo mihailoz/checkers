@@ -1,10 +1,13 @@
 package ui;
 
+import commons.Move;
+
 public interface GameActionListener {
 
     void opponentNicknameRecieved(String nickname);
+    void gameStarted();
     void hostSocketOpened();
     void clientConnected();
-    void validateMove();
+    void opponentMoveRecieved(Move move);
 
 }

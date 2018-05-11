@@ -1,7 +1,5 @@
 package commons;
 
-import commons.Board;
-
 import java.util.ArrayList;
 
 public class GameData {
@@ -14,6 +12,8 @@ public class GameData {
         this.moveHistory = new ArrayList<>();
         this.playerNick = player;
         this.opponentNick = opponent;
+        this.board = new Board();
+        this.board.resetBoard();
     }
 
     public void addMove(Move move) {

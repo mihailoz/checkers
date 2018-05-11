@@ -1,6 +1,8 @@
 package ui;
 
+import commons.GameData;
 import commons.GameType;
+import commons.Move;
 import socket.ConnectionManager;
 
 import javax.swing.*;
@@ -12,6 +14,8 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
     private LobbyPanel lobbyPanel;
 
     private ConnectionManager connectionManager;
+
+    private GameData gameData;
 
     public void launchGame() {
         frame = new JFrame("Space checkers in space");
@@ -41,21 +45,41 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
 
     @Override
     public void opponentNicknameRecieved(String nickname) {
-        System.out.println("YEEEY our oppo is called: " + nickname);
+        gameData = new GameData(connectionManager.getNickname(), nickname);
+    }
+
+    @Override
+    public void gameStarted() {
+        // OVDE TREBA PRIKAZATI TABLU, trebace vam da li je korisnik crni ili beli
+        // to sam napravio da ako je host onda je beli, ako je gost onda je crn
+        // mozete proveriti sta je preko funkcije connectionManager.getType()
+        // dobicete ili GameType.JOIN ili GameType.HOST
+        // moj predlog je da prvo samo prikazete tablu sa figurama, posle cemo lako to povezati da se pomera
+        // po nahodjenju igraca
+
+
+        // PRO TIP: kako prikazati tablu, iznad ima funkcija launchGame() koja prikazuje lobby
+        // samo uradite frame.remove(lobbyPanel) i napravite svoj panel koji je tabla za igru i dodajte pomocu
+        // frame.add(boardPanel)
+        // ali ovo je sve standardan Swing, imate tamo na moodle-u svasta o swingu
     }
 
     @Override
     public void hostSocketOpened() {
-
+        // Ovde treba prikazati neki dialog koji govori korisnika da saceka da se konektuje neko da bi igrali
+        // treba na tom dialog-u da stoji 'cancel' dugme koje cu ja posle povezati da prekine cekanje i vrati
+        // korisnika u lobby
     }
 
     @Override
     public void clientConnected() {
-
+        // Ovde disable-ujete cancel dugme u onom dialogu iz hostSocketOpened() funkcije jer je vec krenuo neko
+        // da se konektuje i ne zelimo da prekinemo sad taj postupak konektovanja i razmene informacija
     }
 
     @Override
-    public void validateMove() {
-
+    public void opponentMoveRecieved(Move move) {
+        // Dobili ste protivnicki potez, treba da pomerite figuru po podacimo iz Move argumenta ove funkcije
+        // pogledajte move, trebalo bi da ima dovoljno podataka, ako vam treba jos nesto dodajte
     }
 }

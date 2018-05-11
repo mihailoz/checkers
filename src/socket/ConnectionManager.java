@@ -1,5 +1,6 @@
 package socket;
 
+import commons.GameStatus;
 import commons.GameType;
 import commons.Move;
 import ui.GameActionListener;
@@ -8,14 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConnectionManager extends DataListener {
-
-    private enum GameStatus {
-        NOT_CONNECTED,
-        CONNECTED,
-        STARTED,
-        PLAYER_TURN,
-        OPPONENT_TURN;
-    }
 
     private GameStatus status;
 
@@ -98,6 +91,12 @@ public class ConnectionManager extends DataListener {
         for (GameActionListener listener : this.listeners) {
             listener.opponentNicknameRecieved(nickname);
         }
+
+        if(type.equals(GameType.HOST)) {
+            this.status = GameStatus.PLAYER_TURN;
+        } else {
+            this.status = GameStatus.OPPONENT_TURN;
+        }
     }
 
     @Override
@@ -107,6 +106,26 @@ public class ConnectionManager extends DataListener {
 
     @Override
     public void moveReceived(Move move) {
+        // Aleksa ovde pozovi svoju funkciju za validaciju poteza!
+        // Ako je sve ok uradi sledeci kod
+        // this.sendData(DataParser.encodeValidateMove(true))
+        for (GameActionListener listener : this.listeners) {
+            listener.opponentMoveRecieved(move);
+        }
 
+        // ako nije onda
+        // this.sendData(DataParser.encodeValidateMove(false))
+    }
+
+    public GameStatus getStatus() {
+        return this.status;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public GameType getType() {
+        return this.getType();
     }
 }

@@ -44,7 +44,7 @@ public class LobbyPanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if(((String) typeComboBox.getSelectedItem()).equals("Join game")) {
+        if(typeComboBox.getSelectedItem().equals("Join game")) {
             showJoinGameOptions();
         } else {
             showHostGameOptions();
@@ -85,7 +85,7 @@ public class LobbyPanel extends JPanel implements ActionListener {
         confirmBtn.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                GameType type = ((String) typeComboBox.getSelectedItem()).equals("Join game") ? GameType.JOIN : GameType.HOST;
+                GameType type = typeComboBox.getSelectedItem().equals("Join game") ? GameType.JOIN : GameType.HOST;
 
                 String host = hostField.getText();
                 String nick = nickField.getText();

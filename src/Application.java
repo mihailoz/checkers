@@ -1,4 +1,3 @@
-import ui.GamePanel;
 import ui.UIController;
 
 import javax.swing.*;

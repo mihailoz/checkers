@@ -1,4 +1,4 @@
-package commons;
+package src.commons;
 
 public class Board {
 

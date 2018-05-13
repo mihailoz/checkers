@@ -1,4 +1,4 @@
-package commons;
+package src.commons;
 
 public enum Field {
     PLAYER_FIGURE,

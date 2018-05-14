@@ -1,7 +1,7 @@
-package src.logic;
+package logic;
 
-import src.commons.Field;
-import src.commons.Move;
+import commons.Field;
+import commons.Move;
 
 import javax.swing.text.html.HTMLDocument;
 import java.util.ArrayList;
@@ -15,8 +15,12 @@ public class TurnController {
     private ArrayList<Field> board;
     private int longestPath;
 
+    private int startPosition;
+    private int distancePassed;
+
     //generates paths for the selected checker
     public void makePathsForField(int i){
+        startPosition = i;
         paths = new ArrayList<>();
 
         //we only look at players checkers
@@ -120,6 +124,24 @@ public class TurnController {
     }
 
     //TODO a function that returns next possible fields after the piece is moved
+    public List<Integer> availableFields(){
+        ArrayList<Integer> list = new ArrayList<>();
+        for(List<Move> l : paths){
+            list.add(l.get(distancePassed).getEndPosition());
+        }
+        return list;
+    }
+
+    public void choosePath(int end){
+        Iterator it = paths.iterator();
+        while(it.hasNext()){
+            List<Move> l = (List<Move>)it.next();
+            if(l.get(distancePassed).getEndPosition() != end){
+                it.remove();
+            }
+        }
+        distancePassed++;
+    }
 }
 
 

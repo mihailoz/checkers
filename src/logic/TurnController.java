@@ -1,7 +1,7 @@
-package src.logic;
+package logic;
 
-import src.commons.Field;
-import src.commons.Move;
+import commons.Field;
+import commons.Move;
 
 import javax.swing.text.html.HTMLDocument;
 import java.util.ArrayList;

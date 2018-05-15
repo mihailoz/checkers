@@ -6,7 +6,6 @@ public class LogicTest {
     public static void main(String[] args){
 
 
-<<<<<<< HEAD
 
 
 //        TurnController controller = new TurnController("PLAYER", board);
@@ -14,13 +13,12 @@ public class LogicTest {
 //        for(int i : controller.availableFields()){
 //            System.out.println(i);
 //        }
-=======
+
         TurnController controller = new TurnController("PLAYER", new Board());
         controller.makePathsForField(19);
         for(int i : controller.availableFields()){
             System.out.println(i);
         }
->>>>>>> 1d8c6d59cafe4f60bc6bfdc42acc83f8eb277fe2
     }
 
     static void normalBoard(Field[] board){

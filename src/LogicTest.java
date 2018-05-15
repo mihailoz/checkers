@@ -1,4 +1,4 @@
-import commons.Board;
+/*import commons.Board;
 import commons.Field;
 import logic.TurnController;
 
@@ -36,3 +36,4 @@ public class LogicTest {
     }
 
 }
+*/

@@ -17,8 +17,10 @@ import java.io.IOException;
  */
 public class FieldComponent extends JPanel {
 
-    private static String WHITE_CHECKER_PATH = "./resources/grayButton.png";
-    private static String BLACK_CHECKER_PATH = "./resources/blackButton.png";
+    private static String WHITE_CHECKER_PATH = "./resources/whiteChecker2.png";
+    private static String BLACK_CHECKER_PATH = "./resources/blackChecker2.png";
+    private static String WHITE_QUEEN_PATH = "./resources/whiteQueen.png";
+    private static String BLACK_QUEEN_PATH = "./resources/blackQueen.png";
 
     private JLabel imageContainer;
     private boolean highlighted;

@@ -10,19 +10,21 @@ public class BoardPanel extends JPanel {
     private FieldComponent[] fields = new FieldComponent[100];
 
     public BoardPanel() {
-
+        int j = 1;
         for(int i = 0; i < fields.length; i++) {
             if((i / 10) % 2 == 0) {
                 if(i % 2 == 0) {
                     fields[i] = new FieldComponent();
                     fields[i].setBackground(Color.lightGray);
                 } else {
-                    fields[i] = new FieldComponent();
+                    fields[i] = new FieldComponent(j);
+                    j++;
                     fields[i].setBackground(Color.darkGray);
                 }
             } else {
                 if(i % 2 == 0) {
-                    fields[i] = new FieldComponent();
+                    fields[i] = new FieldComponent(j);
+                    j++;
                     fields[i].setBackground(Color.darkGray);
                 } else {
                     fields[i] = new FieldComponent();

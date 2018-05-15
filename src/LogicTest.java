@@ -5,34 +5,24 @@ public class LogicTest {
     public static void main(String[] args){
         Field[] board = new Field[50];
 
-        clearBoard(board);
+        normalBoard(board);
 
-        queenTest(board);
 
 
         TurnController controller = new TurnController("PLAYER", board);
-        controller.makePathsForField(16);
-        for(Integer i: controller.availableFields())
+        controller.makePathsForField(19);
+        for(int i : controller.availableFields()){
             System.out.println(i);
-        controller.choosePath(27);
-
-        for(Integer i: controller.availableFields())
-            System.out.println(i);
-
-        controller.choosePath(36);
-
-        System.out.println("ako izbaci nista to je mozda ok");
-        for(Integer i: controller.availableFields())
-            System.out.println(i);
+        }
     }
 
     static void normalBoard(Field[] board){
         for(int i=0;i<20;i++)
-            board[i] = Field.PLAYER_FIGURE;
+            board[i] = Field.OPPONENT_FIGURE;
         for(int i = 20; i<30;i++)
             board[i] = Field.EMPTY;
         for(int i=30;i<50;i++)
-            board[i] = Field.OPPONENT_FIGURE;
+            board[i] = Field.PLAYER_FIGURE;
     }
 
     static void clearBoard(Field[] board){

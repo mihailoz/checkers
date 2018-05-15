@@ -15,7 +15,7 @@ import static logic.FlipField.logicToBoard;
 public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
 
     private FieldComponent[] fields = new FieldComponent[100];
-    private FieldComponent[] blackFields = new FieldComponent[50];
+    private FieldComponent[] blackFields = new FieldComponent[51];
 
     private java.util.List<Integer> highlightedFields;
 
@@ -32,7 +32,7 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
                     fields[i].setBackground(Color.lightGray);
                 } else {
                     fields[i] = new FieldComponent(j);
-                    blackFields[j - 1] = fields[i];
+                    blackFields[j] = fields[i];
                     fields[i].setListener(this);
                     j++;
                     fields[i].setBackground(Color.darkGray);
@@ -40,7 +40,7 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
             } else {
                 if(i % 2 == 0) {
                     fields[i] = new FieldComponent(j);
-                    blackFields[j - 1] = fields[i];
+                    blackFields[j] = fields[i];
                     fields[i].setListener(this);
                     j++;
                     fields[i].setBackground(Color.darkGray);
@@ -60,10 +60,9 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
 
     public void updateBoard(GameData gameData) {
         //TODO getboardgetboard NO
-        turnController = new TurnController("PLAYER",
-                FlipField.convertBoardToLogic(gameData.getBoard().getBoard()));
+        turnController = new TurnController("PLAYER", gameData.getBoard().getBoard());
 
-        for(int i = 0; i < gameData.getBoard().getSize(); i++) {
+        for(int i = 1; i < gameData.getBoard().getSize(); i++) {
             blackFields[i].setType(gameData.getBoard().getField(i));
         }
     }
@@ -79,15 +78,14 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
                     blackFields[i].setHighlighted(false);
 
                 this.highlightedFields.clear();
-                blackFields[j - 1].setHighlighted(true);
-                this.highlightedFields.add(j - 1);
+                blackFields[j].setHighlighted(true);
+                this.highlightedFields.add(j);
 
-                int convertedBTL = boardToLogic[j];
-                turnController.makePathsForField(convertedBTL);
+                turnController.makePathsForField(j);
                 java.util.List<Integer> fields = turnController.availableFields();
                 for(Integer i : fields) {
-                    blackFields[logicToBoard[i] - 1].setHighlighted(true);
-                    this.highlightedFields.add(logicToBoard[i] - 1);
+                    blackFields[i].setHighlighted(true);
+                    this.highlightedFields.add(i);
                 }
             }
         }

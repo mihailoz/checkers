@@ -31,15 +31,15 @@ public class TurnController {
         this.board = new ArrayList<Field>(Arrays.asList(board));
         if(player.equals("PLAYER")){
             tableEnd = 9;
-            leftCalc = BoardCalculator.getLeftUp();
-            rightCalc = BoardCalculator.getRightUp();
+            leftCalc = BoardCalculator.getLeftUp2();
+            rightCalc = BoardCalculator.getRightUp2();
             direction = 1;
         }
         else{
             tableEnd = 0;
             direction = -1;
-            leftCalc = BoardCalculator.getLeftDown();
-            rightCalc = BoardCalculator.getRightDown();
+            leftCalc = BoardCalculator.getLeftDown2();
+            rightCalc = BoardCalculator.getRightDown2();
         }
     }
 

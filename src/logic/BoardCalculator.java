@@ -8,11 +8,21 @@ public class BoardCalculator {
 
     public static Calculator[] directions(){
         Calculator[] c = new Calculator[4];
-        c[0] = BoardCalculator.getLeftUp();
-        c[1] = BoardCalculator.getRightUp();
-        c[2] = BoardCalculator.getLeftDown();
-        c[3] = BoardCalculator.getRightDown();
+        c[0] = BoardCalculator.getLeftUp2();
+        c[1] = BoardCalculator.getRightUp2();
+        c[2] = BoardCalculator.getLeftDown2();
+        c[3] = BoardCalculator.getRightDown2();
         return c;
+    }
+
+    //ako parno onda -6 u suprotnom -5
+    //(pos-1)/5%2
+    public static Calculator getLeftUp2(){
+        return (int pos) ->{
+            if(pos<=5 || pos%10==6)
+                return -1;
+            return pos-5-((pos-1)/5)%2;
+        };
     }
 
     public static Calculator getLeftUp(){
@@ -22,6 +32,15 @@ public class BoardCalculator {
             return pos+4+(pos/5)%2;
         };
     }
+
+    public static Calculator getRightUp2(){
+        return (int pos) ->{
+            if(pos<=5 || pos%10==5)
+                return -1;
+            return pos-4-((pos-1)/5)%2;
+        };
+    }
+
 
     public static Calculator getRightUp(){
         return (int pos) ->{
@@ -40,11 +59,29 @@ public class BoardCalculator {
         };
     }
 
+    public static Calculator getLeftDown2(){
+        return (int pos) ->
+        {
+            if(pos>45 || pos%10==6)
+                return -1;
+            return pos + 5 - ((pos-1)/5)%2;
+        };
+    }
+
     public static Calculator getRightDown(){
         return (int pos) -> {
             if(pos/5==0 || pos%10==9)
                 return -1;
             return pos -5 + (pos/5)%2;
+        };
+    }
+
+    public static Calculator getRightDown2(){
+        return (int pos) ->
+        {
+            if(pos>45 || pos%10==5)
+                return -1;
+            return pos + 6 - ((pos-1)/5)%2;
         };
     }
 

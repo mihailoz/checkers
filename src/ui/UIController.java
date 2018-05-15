@@ -13,6 +13,7 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
     private JFrame frame;
 
     private LobbyPanel lobbyPanel;
+    private GamePanel gamePanel;
 
     private ConnectionManager connectionManager;
 
@@ -47,6 +48,11 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
     @Override
     public void opponentNicknameRecieved(String nickname) {
         gameData = new GameData(connectionManager.getNickname(), nickname);
+
+        if(gamePanel != null) {
+            gamePanel.setOpponentNick(nickname);
+        }
+
         System.out.println("Our opponent is called: " + nickname);
     }
 
@@ -66,7 +72,17 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
         // ali ovo je sve standardan Swing, imate tamo na moodle-u svasta o swingu
         System.out.println("GAME STARTED");
         frame.remove(lobbyPanel);
-        frame.add(new GamePanel());
+
+        gamePanel = new GamePanel();
+
+        if(gameData != null) {
+            gamePanel.setPlayerNick(gameData.getPlayerNick());
+            gamePanel.setOpponentNick(gameData.getOpponentNick());
+        } else {
+            gamePanel.setPlayerNick(connectionManager.getNickname());
+        }
+
+        frame.add(gamePanel);
         frame.pack();
     }
 

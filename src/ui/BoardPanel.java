@@ -7,16 +7,16 @@ public class BoardPanel extends JPanel {
 
     public BoardPanel() {
 
-        JButton[] blackButtons = new JButton[50];
-        JButton[] whiteButtons = new JButton[50];
+        FieldComponent[] blackButtons = new FieldComponent[50];
+        FieldComponent[] whiteButtons = new FieldComponent[50];
 
         for(int i = 0; i < blackButtons.length; i++){
-            blackButtons[i] = new JButton();
+            blackButtons[i] = new FieldComponent(false);
             blackButtons[i].setBackground(Color.BLACK);
         }
 
         for(int i = 0; i < whiteButtons.length; i++){
-            whiteButtons[i] = new JButton();
+            whiteButtons[i] = new FieldComponent(true);
             whiteButtons[i].setBackground(Color.WHITE);
         }
 

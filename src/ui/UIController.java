@@ -13,6 +13,8 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
 
     private LobbyPanel lobbyPanel;
 
+    private BoardPanel boardPanel;
+
     private ConnectionManager connectionManager;
 
     private GameData gameData;

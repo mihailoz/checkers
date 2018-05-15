@@ -6,6 +6,7 @@ import commons.Move;
 import socket.ConnectionManager;
 
 import javax.swing.*;
+import java.util.logging.Logger;
 
 public class UIController implements LobbyPanel.LobbyListener, GameActionListener {
 
@@ -48,6 +49,7 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
     @Override
     public void opponentNicknameRecieved(String nickname) {
         gameData = new GameData(connectionManager.getNickname(), nickname);
+        System.out.println("Our opponent is called: " + nickname);
     }
 
     @Override
@@ -64,6 +66,10 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
         // samo uradite frame.remove(lobbyPanel) i napravite svoj panel koji je tabla za igru i dodajte pomocu
         // frame.add(boardPanel)
         // ali ovo je sve standardan Swing, imate tamo na moodle-u svasta o swingu
+        System.out.println("GAME STARTED");
+        frame.remove(lobbyPanel);
+        frame.add(new GamePanel());
+        frame.pack();
     }
 
     @Override
@@ -77,6 +83,7 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
     public void clientConnected() {
         // Ovde disable-ujete cancel dugme u onom dialogu iz hostSocketOpened() funkcije jer je vec krenuo neko
         // da se konektuje i ne zelimo da prekinemo sad taj postupak konektovanja i razmene informacija
+        System.out.println("CLIENT CONNECTED");
     }
 
     @Override

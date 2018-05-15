@@ -88,6 +88,10 @@ public class ConnectionManager extends DataListener {
 
         this.status = GameStatus.STARTED;
 
+        for(GameActionListener listener : this.listeners) {
+            listener.gameStarted();
+        }
+
         for (GameActionListener listener : this.listeners) {
             listener.opponentNicknameRecieved(nickname);
         }

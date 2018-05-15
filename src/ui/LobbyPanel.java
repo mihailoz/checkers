@@ -4,131 +4,100 @@ import commons.GameType;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
-public class LobbyPanel extends JPanel implements ActionListener {
+public class LobbyPanel extends JPanel implements ItemListener {
+
+    private final String HOST_PANEL = "Host game";
+    private final String GUEST_PANEL = "Join game";
 
     private JComboBox typeComboBox;
     private JTextField hostField, nickField, portField;
     private JButton confirmBtn;
 
+    private HostLobbyPanel hostPanel;
+    private GuestLobbyPanel guestPanel;
+    private JPanel cards;
+
     private LobbyListener listener;
 
     public LobbyPanel(LobbyListener listener) {
         this.listener = listener;
+        this.setLayout(new BorderLayout());
 
-        String[] options = new String[] {"Host game", "Join game"};
+        cards = new JPanel(new CardLayout());
+
+        guestPanel = new GuestLobbyPanel();
+        hostPanel = new HostLobbyPanel();
+
+        addButtonListeners();
+
+        cards.add(hostPanel, HOST_PANEL);
+        cards.add(guestPanel, GUEST_PANEL);
+
+        String[] options = new String[] { HOST_PANEL, GUEST_PANEL };
+        JPanel comboBoxPane = new JPanel();
         typeComboBox = new JComboBox(options);
+        typeComboBox.setEditable(false);
+        typeComboBox.addItemListener(this);
+        comboBoxPane.add(typeComboBox);
 
-        hostField = new JTextField("localhost");
-        nickField = new JTextField("MyNickname");
-        portField = new JTextField("8000");
-
-        confirmBtn = new JButton();
-        this.addButtonListener();
-
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.add(typeComboBox);
-
-        this.showHostGameOptions();
-
-        typeComboBox.addActionListener(this);
+        this.add(comboBoxPane, BorderLayout.PAGE_START);
+        this.add(cards, BorderLayout.CENTER);
     }
 
     public Dimension getPreferredSize() {
-        return new Dimension(400, 400);
+        return new Dimension(400, 240);
     }
 
     @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-        if(typeComboBox.getSelectedItem().equals("Join game")) {
-            showJoinGameOptions();
-        } else {
-            showHostGameOptions();
-        }
+    public void itemStateChanged(ItemEvent evt) {
+        CardLayout cl = (CardLayout)(cards.getLayout());
+        cl.show(cards, (String)evt.getItem());
     }
 
-    private void showJoinGameOptions() {
-        this.removeFields();
-
-        this.add(nickField);
-        this.add(hostField);
-        this.add(portField);
-
-        confirmBtn.setText("Join");
-
-        this.add(confirmBtn);
-
-    }
-
-    private void showHostGameOptions() {
-        this.removeFields();
-
-        this.add(nickField);
-        this.add(portField);
-
-        confirmBtn.setText("Host");
-
-        this.add(confirmBtn);
-    }
-
-    private void removeFields() {
-        this.remove(hostField);
-        this.remove(nickField);
-        this.remove(portField);
-    }
-
-    private void addButtonListener() {
-        confirmBtn.addMouseListener(new MouseListener() {
+    private void addButtonListeners() {
+        guestPanel.addButtonListener(new ActionListener() {
             @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-                GameType type = typeComboBox.getSelectedItem().equals("Join game") ? GameType.JOIN : GameType.HOST;
-
-                String host = hostField.getText();
-                String nick = nickField.getText();
-                int port;
-
+            public void actionPerformed(ActionEvent e) {
+                String nick = guestPanel.getNickname();
+                String host = guestPanel.getHost();
                 try {
-                    port = Integer.parseInt(portField.getText());
-                } catch (NumberFormatException nfe) {
-                    JOptionPane.showMessageDialog(LobbyPanel.this, "Port must be a number lesser than 65536!", "Warning", JOptionPane.ERROR_MESSAGE);
-                    return;
+                    int port = Integer.parseInt(guestPanel.getPort());
+
+                    if(host.isEmpty()) {
+                        JOptionPane.showMessageDialog(LobbyPanel.this, "Hostname cannot be empty!", "Warning", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if(nick.isEmpty()) {
+                        JOptionPane.showMessageDialog(LobbyPanel.this, "Nickname cannot be empty!", "Warning", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    LobbyPanel.this.listener.actionPerformed(GameType.JOIN, nick, host, port);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(LobbyPanel.this, "Port has to be a number!", "Warning", JOptionPane.ERROR_MESSAGE);
                 }
+            }
+        });
 
-                if(type.equals(GameType.JOIN) && host.isEmpty()) {
-                    JOptionPane.showMessageDialog(LobbyPanel.this, "Host field cannot be empty!", "Warning", JOptionPane.ERROR_MESSAGE);
-                    return;
+        hostPanel.addButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nick = hostPanel.getNickname();
+                try {
+                    int port = Integer.parseInt(hostPanel.getPort());
+
+                    if(nick.isEmpty()) {
+                        JOptionPane.showMessageDialog(LobbyPanel.this, "Nickname cannot be empty!", "Warning", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    LobbyPanel.this.listener.actionPerformed(GameType.HOST, nick, null, port);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(LobbyPanel.this, "Port has to be a number!", "Warning", JOptionPane.ERROR_MESSAGE);
                 }
-
-                if(nick.isEmpty()) {
-                    JOptionPane.showMessageDialog(LobbyPanel.this, "Nickname cannot be empty!", "Warning", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                listener.actionPerformed(type, nick, host, port);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent mouseEvent) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent mouseEvent) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent mouseEvent) {
-
             }
         });
     }

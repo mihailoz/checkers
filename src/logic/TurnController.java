@@ -2,6 +2,7 @@ package logic;
 
 import commons.Board;
 import commons.Field;
+import commons.GameData;
 import commons.Move;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class TurnController {
     private int direction;
 
     private int startPosition;
+    private boolean lockdown;
     private int distancePassed;
     private Calculator leftCalc;
     private Calculator rightCalc;
@@ -32,6 +34,7 @@ public class TurnController {
     //TODO modify this part of the code to fit the right parameters
     public TurnController(String player, Board board){
 
+        lockdown = false;
         this.board = board;
         this.fields = new ArrayList<Field>(Arrays.asList(board.getFields()));
         if(player.equals("PLAYER")){
@@ -172,6 +175,9 @@ public class TurnController {
     //this is kind of it, but it needs to be better
     public List<Integer> availableFields(){
         ArrayList<Integer> list = new ArrayList<>();
+        if(lockdown){
+            return list;
+        }
         if(distancePassed<longestPath)
             for(List<Move> l : paths){
                 list.add(l.get(distancePassed).getEndPosition());
@@ -180,6 +186,7 @@ public class TurnController {
     }
 
     public void choosePath(int end){
+        lockdown = true;
         Iterator it = paths.iterator();
         Move m=null;
         while(it.hasNext()){
@@ -191,7 +198,10 @@ public class TurnController {
             }
         }if(m!=null) {
             board.setField(Field.EMPTY, m.getStartPosition());
-            board.setField(Field.EMPTY, m.getEatenPosition());
+
+            if(m.getEatenPosition() != -1)
+                board.setField(Field.EMPTY, m.getEatenPosition());
+
             board.setField(m.getFigure(), m.getEndPosition());
             if((m.getEndPosition()-1)/5==tableEnd){
                 if(m.getFigure()==Field.PLAYER_FIGURE)
@@ -205,6 +215,10 @@ public class TurnController {
 
     public boolean isTurnOver(){
         return turnOver;
+    }
+
+    public Board getBoard() {
+        return board;
     }
 
 

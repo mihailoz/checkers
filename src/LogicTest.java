@@ -6,14 +6,6 @@ public class LogicTest {
     public static void main(String[] args){
 
 
-
-
-//        TurnController controller = new TurnController("PLAYER", board);
-//        controller.makePathsForField(19);
-//        for(int i : controller.availableFields()){
-//            System.out.println(i);
-//        }
-
         TurnController controller = new TurnController("PLAYER", new Board());
         controller.makePathsForField(19);
         for(int i : controller.availableFields()){

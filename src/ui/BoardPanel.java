@@ -59,8 +59,7 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
     }
 
     public void updateBoard(GameData gameData) {
-        //TODO getboardgetboard NO
-        turnController = new TurnController("PLAYER", gameData.getBoard().getBoard());
+        turnController = new TurnController("PLAYER", gameData.getBoard());
 
         for(int i = 1; i < gameData.getBoard().getSize(); i++) {
             blackFields[i].setType(gameData.getBoard().getField(i));

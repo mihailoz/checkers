@@ -3,14 +3,15 @@ package commons;
 public class Move {
 
     private int startPosition, endPosition;
-    private int eaten;
-    private Field figure;
+    private int eatenPosition;
+    private Field checker;
 
-    public Move(int startPosition, int endPosition, int eaten, Field figure) {
+    public Move(int startPosition, int endPosition, int eaten, Field checker) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
-        this.eaten = eaten;
-        this.figure = figure;
+        this.eatenPosition = eaten;
+        this.checker = checker;
+
     }
 
     public int getStartPosition() {
@@ -21,11 +22,10 @@ public class Move {
         return endPosition;
     }
 
-    public int getEaten() {
-        return eaten;
+    public int getEatenPosition() {
+        return eatenPosition;
     }
 
-    public Field getFigure() {
-        return figure;
-    }
+    public Field getChecker(){  return checker; }
+
 }

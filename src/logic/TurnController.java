@@ -15,8 +15,10 @@ public class TurnController {
 
     private List< List<Move>> paths;
 
-    private ArrayList<Field> board;
+    private ArrayList<Field> fields;
     private int longestPath;
+    private Board board;
+    private Field player;
 
     private int tableEnd;
     private int direction;
@@ -25,10 +27,12 @@ public class TurnController {
     private int distancePassed;
     private Calculator leftCalc;
     private Calculator rightCalc;
+    private boolean turnOver;
 
     //TODO modify this part of the code to fit the right parameters
-    public TurnController(String player, Field[] board){
-        this.board = new ArrayList<Field>(Arrays.asList(board));
+    public TurnController(String player, Board board){
+        this.board = board;
+        this.fields = new ArrayList<Field>(Arrays.asList(board.getFields()));
         if(player.equals("PLAYER")){
             tableEnd = 9;
             leftCalc = BoardCalculator.getLeftUp2();
@@ -49,18 +53,18 @@ public class TurnController {
         distancePassed = 0;
         longestPath = -1;
         paths = new ArrayList<>();
-        Field f = board.get(i);
+        Field f = fields.get(i);
 
         //if the checker is a queen
         //should all be good
         if(f.equals(Field.PLAYER_QUEEN)){
-            makePathsForQueen(i,board,new ArrayList<Move>());
+            makePathsForQueen(i, fields,new ArrayList<Move>());
             if(paths.size()==0){
                 for(Calculator c : directions()){
                     int next = c.getNext(i);
-                    while(next!=-1 && board.get(next)==Field.EMPTY){
+                    while(next!=-1 && fields.get(next)==Field.EMPTY){
                         ArrayList<Move> simpleList = new ArrayList<>();
-                        simpleList.add(new Move(i, next, 1, Field.EMPTY));
+                        simpleList.add(new Move(i, next, -1, fields.get(i)));
                         paths.add(simpleList);
                         next = c.getNext(next);
                     }
@@ -70,48 +74,28 @@ public class TurnController {
 
         //if checker is a regular checker
         if(f.equals(Field.PLAYER_FIGURE)){
-//            tryMove(i, i + 9, new ArrayList<Move>(), new ArrayList<Field>(board));
-//
-//            tryMove(i, i + 11, new ArrayList<Move>(), new ArrayList<Field>(board));
-//
-//            tryMove(i, i - 9, new ArrayList<Move>(), new ArrayList<Field>(board));
-//
-//            tryMove(i, i - 11, new ArrayList<Move>(), new ArrayList<Field>(board));
-            makePathsForPawn(i, board, new ArrayList<Move>());
+
+            makePathsForPawn(i, fields, new ArrayList<Move>());
 
             if(paths.size()==0){
                 int left = leftCalc.getNext(i);
-                if(left != -1 && board.get(left)==Field.EMPTY){
+                if(left != -1 && fields.get(left)==Field.EMPTY){
                     ArrayList<Move> list = new ArrayList<>();
-                    list.add(new Move(i, left, 1, board.get(i)));
+                    list.add(new Move(i, left, -1, fields.get(i)));
                     longestPath = 1;
                     paths.add(list);
                 }
 
                 int right = rightCalc.getNext(i);
-                if(right!=-1 && board.get(right)==Field.EMPTY){
+                if(right!=-1 && fields.get(right)==Field.EMPTY){
                     ArrayList<Move> list = new ArrayList<>();
-                    list.add(new Move(i, right, 1, board.get(i)));
+                    list.add(new Move(i, right, -1, fields.get(i)));
                     paths.add(list);
                     longestPath = 1;
                 }
             }
         }
-//        //TODO instead of hardcoding 4 and 5, the values should be contained with client/host
-//        if(paths.size()==0){
-//            int next = BoardCalculator.getLeftUp().getNext(i);
-//            if(next!=-1 && board.get(i+next).equals(Field.EMPTY)){
-//                ArrayList<Move> list = new ArrayList<>();
-//                list.add(new Move(i, i+next, 1, board.get(i)));
-//                paths.add(list);
-//            }
-//            next = BoardCalculator.getRightUp().getNext(i);
-//            if(checkBoarders(i,next) && board.get(i+next).equals(Field.EMPTY)){
-//                ArrayList<Move> list = new ArrayList<>();
-//                list.add(new Move(i, i+next, 1, board.get(i)));
-//                paths.add(list);
-//            }
-//        }
+
             Iterator it = paths.iterator();
             while(it.hasNext()){
                 List<Move> l = (List<Move>) it.next();
@@ -122,56 +106,6 @@ public class TurnController {
     }
 
 
-
-    //goes thru the board, finding all the paths
-    private void tryMove(int start, int end, ArrayList<Move> list,
-                         ArrayList<Field> board){
-        boolean terminalState=false;
-        if(end<0 || end>49){
-            terminalState = true;
-        }
-        int diff = end - start;
-        int middle = start + (diff+1)/2;
-
-        if(!checkBoarders(start, diff)){
-            terminalState = true;
-        }
-
-        if(!terminalState) {
-            Field endField = board.get(end);
-            Field middleField = board.get(middle);
-
-            if (!endField.equals(Field.EMPTY) ||
-                    !(middleField.equals(Field.OPPONENT_FIGURE) ||
-                            (middleField.equals(Field.OPPONENT_QUEEN)))) {
-                terminalState = true;
-            }
-        }
-
-
-        if(!terminalState){
-
-            ArrayList<Field> boardCopy = new ArrayList<>(board);
-            boardCopy.set(middle, Field.EMPTY);
-
-            ArrayList<Move> listCopy = new ArrayList<>(list);
-            listCopy.add(new Move(start, end, 1, board.get(start)));
-
-            tryMove(end, end + 9, listCopy, boardCopy);
-
-            tryMove(end, end + 11, listCopy, boardCopy);
-
-            tryMove(end, end - 9, listCopy, boardCopy);
-
-            tryMove(end, end - 11, listCopy, boardCopy);
-        }else{
-            if(list.size() >= longestPath && list.size()!=0){
-                longestPath = list.size();
-                paths.add(list);
-            }
-        }
-
-    }
 
 
     private void makePathsForPawn(int start, ArrayList<Field> board, ArrayList<Move> list){
@@ -185,7 +119,7 @@ public class TurnController {
                     ArrayList<Field> boardCopy = new ArrayList<>(board);
                     boardCopy.set(next, Field.EMPTY);
                     ArrayList<Move> listCopy = new ArrayList<>(list);
-                    listCopy.add(new Move(start, end,1, board.get(end)));
+                    listCopy.add(new Move(start, end,next, fields.get(start)));
                     makePathsForPawn(end, boardCopy, listCopy);
                     terminalState = false;
                 }
@@ -212,13 +146,13 @@ public class TurnController {
             if(next!=-1 & c.getNext(next)!=-1){
                 ArrayList<Field> boardCopy = new ArrayList<>(board);
                 boardCopy.set(next, Field.EMPTY);
-                next = c.getNext(next);
-                while(next!=-1 && board.get(next)==Field.EMPTY){
+                int end = c.getNext(next);
+                while(end!=-1 && board.get(end)==Field.EMPTY){
                     ArrayList<Move> listCopy = new ArrayList<>(list);
-                    listCopy.add(new Move(start, next,1, board.get(next)));
-                    makePathsForQueen(next,boardCopy, listCopy);
+                    listCopy.add(new Move(start, end,next, fields.get(start)));
+                    makePathsForQueen(end,boardCopy, listCopy);
                     terminalState = false;
-                    next = c.getNext(next);
+                    end = c.getNext(end);
                 }
             }
         }
@@ -246,13 +180,30 @@ public class TurnController {
 
     public void choosePath(int end){
         Iterator it = paths.iterator();
+        Move m=null;
         while(it.hasNext()){
             List<Move> l = (List<Move>)it.next();
             if(l.get(distancePassed).getEndPosition() != end){
                 it.remove();
+            }else{
+                m = l.get(distancePassed);
+            }
+        }if(m!=null) {
+            board.setField(Field.EMPTY, m.getStartPosition());
+            board.setField(Field.EMPTY, m.getEatenPosition());
+            board.setField(m.getChecker(), m.getEndPosition());
+            if((m.getEndPosition()-1)/5==tableEnd){
+                if(m.getChecker()==Field.PLAYER_FIGURE)
+                    board.setField(Field.PLAYER_QUEEN, m.getEndPosition());
             }
         }
         distancePassed++;
+        if(distancePassed==longestPath)
+            turnOver = true;
+    }
+
+    public boolean isTurnOver(){
+        return turnOver;
     }
 
 

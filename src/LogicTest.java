@@ -9,11 +9,11 @@ public class LogicTest {
 
 
 
-        TurnController controller = new TurnController("PLAYER", board);
-        controller.makePathsForField(19);
-        for(int i : controller.availableFields()){
-            System.out.println(i);
-        }
+//        TurnController controller = new TurnController("PLAYER", board);
+//        controller.makePathsForField(19);
+//        for(int i : controller.availableFields()){
+//            System.out.println(i);
+//        }
     }
 
     static void normalBoard(Field[] board){

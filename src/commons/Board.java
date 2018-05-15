@@ -2,7 +2,7 @@ package commons;
 
 public class Board {
 
-    public Field[] getBoard() {
+    public Field[] getFields() {
         return board;
     }
 
@@ -23,7 +23,7 @@ public class Board {
             setField(Field.PLAYER_FIGURE, i);
     }
 
-    private void setField(Field f, int i) {
+    public void setField(Field f, int i) {
         if (i < 1 || i > 50)
             throw new IllegalArgumentException("Field identifier must be a number from 1 to 50");
 

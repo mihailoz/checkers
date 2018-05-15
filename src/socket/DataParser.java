@@ -35,7 +35,7 @@ public class DataParser {
                 ";" +
                 move.getEndPosition() +
                 ";" +
-                move.getEaten() +
+                move.getEatenPosition() +
                 ";" +
                 move.getFigure().toString();
     }

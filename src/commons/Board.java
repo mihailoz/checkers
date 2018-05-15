@@ -65,6 +65,19 @@ public class Board {
         return board[i];
     }
 
+    public void reversePlayers() {
+        for(int i = 1; i < this.getSize(); i++) {
+            if(getField(i).equals(Field.PLAYER_FIGURE))
+                setField(Field.OPPONENT_FIGURE, i);
+            else if (getField(i).equals(Field.PLAYER_QUEEN))
+                setField(Field.OPPONENT_QUEEN, i);
+            else if (getField(i).equals(Field.OPPONENT_FIGURE))
+                setField(Field.PLAYER_FIGURE, i);
+            else if (getField(i).equals(Field.OPPONENT_QUEEN))
+                setField(Field.PLAYER_QUEEN, i);
+        }
+    }
+
     public Field[] getFields() {
         return board;
     }

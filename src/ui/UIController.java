@@ -1,11 +1,12 @@
 package ui;
 
+import commons.Board;
 import commons.GameData;
 import commons.GameType;
-import commons.Move;
 import socket.ConnectionManager;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class UIController implements LobbyPanel.LobbyListener, GameActionListener {
 
@@ -13,8 +14,6 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
 
     private LobbyPanel lobbyPanel;
     private GamePanel gamePanel;
-
-    private BoardPanel boardPanel;
 
     private ConnectionManager connectionManager;
 
@@ -53,6 +52,7 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
         if(gamePanel != null) {
             gamePanel.setOpponentNick(nickname);
             gamePanel.setGameData(gameData);
+            gamePanel.setConnectionManager(connectionManager);
         }
 
         System.out.println("Our opponent is called: " + nickname);
@@ -104,8 +104,9 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
     }
 
     @Override
-    public void opponentMoveRecieved(Move move) {
+    public void opponentMoveRecieved(Board board) {
         // Dobili ste protivnicki potez, treba da pomerite figuru po podacimo iz Move argumenta ove funkcije
         // pogledajte move, trebalo bi da ima dovoljno podataka, ako vam treba jos nesto dodajte
+        gamePanel.moveReceived(board);
     }
 }

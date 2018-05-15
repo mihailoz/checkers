@@ -1,7 +1,10 @@
 package socket;
 
+import commons.Board;
 import commons.Field;
 import commons.Move;
+
+import java.util.ArrayList;
 
 public class DataParser {
 
@@ -28,16 +31,17 @@ public class DataParser {
         }
     }
 
-    public static String encodeMove(Move move) {
-        return String.valueOf(MOVE_CODE) +
-                ";" +
-                move.getStartPosition() +
-                ";" +
-                move.getEndPosition() +
-                ";" +
-                move.getEatenPosition() +
-                ";" +
-                move.getFigure().toString();
+    public static String encodeMove(Board board) {
+        StringBuilder move = new StringBuilder();
+        move.append(String.valueOf(MOVE_CODE));
+        move.append(";");
+
+        for(int i = 1; i < board.getSize(); i++) {
+            move.append(board.getField(i).toInteger());
+            move.append(" ");
+        }
+
+        return move.toString();
     }
 
     public static String encodeNick(String nickname) {
@@ -63,14 +67,25 @@ public class DataParser {
         }
     }
 
-    public static Move decodeMove(String data) {
+    public static Board decodeMove(String data) {
         String[] splitted = data.split(";");
 
-        int startPosition = Integer.parseInt(splitted[1]);
-        int endPosition = Integer.parseInt(splitted[2]);
-        int eaten = Integer.parseInt(splitted[3]);
-        Field figure = Field.valueOf(splitted[4]);
+        String[] ints = splitted[1].split(" ");
 
-        return new Move(startPosition, endPosition, eaten, figure);
+        ArrayList<Integer> fields = new ArrayList<>();
+
+        for(String s : ints) {
+            fields.add(Integer.parseInt(s));
+        }
+
+        Board board = new Board();
+
+        for(int i = 0; i < fields.size(); i++) {
+            board.setField(Field.fromInteger(fields.get(i)), i + 1);
+        }
+
+        board.reversePlayers();
+
+        return board;
     }
 }

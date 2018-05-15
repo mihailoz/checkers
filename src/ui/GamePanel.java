@@ -1,18 +1,19 @@
 package ui;
 
+import commons.Board;
 import commons.GameData;
 import commons.GameType;
-import logic.TurnController;
+import socket.ConnectionManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel {
 
     private BoardPanel boardPanel;
     private GameData gameData;
     private PlayerPanel playerPanel, opponentPanel;
-    private TurnController turnController;
 
     public GamePanel(GameType gt) {
         this.setLayout(new BorderLayout());
@@ -42,5 +43,13 @@ public class GamePanel extends JPanel {
         this.gameData = gameData;
 
         boardPanel.updateBoard(gameData);
+    }
+
+    public void setConnectionManager(ConnectionManager connectionManager) {
+        this.boardPanel.setConnectionManager(connectionManager);
+    }
+
+    public void moveReceived(Board board) {
+        this.boardPanel.moveReceived(board);
     }
 }

@@ -1,44 +1,46 @@
 package ui;
 
+import commons.GameData;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class BoardPanel extends JPanel {
 
+    private FieldComponent[] fields = new FieldComponent[100];
+
     public BoardPanel() {
 
-        FieldComponent[] blackButtons = new FieldComponent[50];
-        FieldComponent[] whiteButtons = new FieldComponent[50];
-
-        for(int i = 0; i < blackButtons.length; i++){
-            blackButtons[i] = new FieldComponent(false);
-            blackButtons[i].setBackground(Color.BLACK);
-        }
-
-        for(int i = 0; i < whiteButtons.length; i++){
-            whiteButtons[i] = new FieldComponent(true);
-            whiteButtons[i].setBackground(Color.WHITE);
+        for(int i = 0; i < fields.length; i++) {
+            if((i / 10) % 2 == 0) {
+                if(i % 2 == 0) {
+                    fields[i] = new FieldComponent();
+                    fields[i].setBackground(Color.lightGray);
+                } else {
+                    fields[i] = new FieldComponent();
+                    fields[i].setBackground(Color.darkGray);
+                }
+            } else {
+                if(i % 2 == 0) {
+                    fields[i] = new FieldComponent();
+                    fields[i].setBackground(Color.darkGray);
+                } else {
+                    fields[i] = new FieldComponent();
+                    fields[i].setBackground(Color.lightGray);
+                }
+            }
         }
 
         this.setLayout(new GridLayout(10,10));
-        this.setSize(1000,1000);
 
-        for(int i = 0; i < 10; i++){
-            if(i % 2 == 0){
-                for(int j = 0; j < 5; j++){
-                    this.add(whiteButtons[5 * i + j]);
-                    this.add(blackButtons[5 * i + j]);
-                }
-            }
-            else{
-                for(int j = 0; j < 5; j++){
-                    this.add(blackButtons[5 * i + j]);
-                    this.add(whiteButtons[5 * i + j]);
-                }
-            }
+        for(int i = 0; i < fields.length; i++){
+            this.add(fields[i]);
         }
-
-
     }
 
+    public void updateBoard(GameData gameData) {
+        for(int i = 0; i < gameData.getBoard().getSize(); i++) {
+            fields[i].setType(gameData.getBoard().getField(i));
+        }
+    }
 }

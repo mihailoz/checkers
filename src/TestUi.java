@@ -8,7 +8,10 @@ public class TestUi {
 
         BoardPanel panel = new BoardPanel();
 
+        frame = new JFrame("Checkers");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
+        frame.pack();
         frame.setVisible(true);
 
     }

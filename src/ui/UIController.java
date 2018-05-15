@@ -15,6 +15,8 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
     private LobbyPanel lobbyPanel;
     private GamePanel gamePanel;
 
+    private BoardPanel boardPanel;
+
     private ConnectionManager connectionManager;
 
     private GameData gameData;
@@ -51,6 +53,7 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
 
         if(gamePanel != null) {
             gamePanel.setOpponentNick(nickname);
+            gamePanel.setGameData(gameData);
         }
 
         System.out.println("Our opponent is called: " + nickname);
@@ -78,6 +81,7 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
         if(gameData != null) {
             gamePanel.setPlayerNick(gameData.getPlayerNick());
             gamePanel.setOpponentNick(gameData.getOpponentNick());
+            gamePanel.setGameData(gameData);
         } else {
             gamePanel.setPlayerNick(connectionManager.getNickname());
         }

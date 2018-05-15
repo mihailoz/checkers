@@ -1,5 +1,6 @@
 package socket;
 
+import commons.Board;
 import commons.GameStatus;
 import commons.GameType;
 import commons.Move;
@@ -109,12 +110,12 @@ public class ConnectionManager extends DataListener {
     }
 
     @Override
-    public void moveReceived(Move move) {
+    public void moveReceived(Board board) {
         // Aleksa ovde pozovi svoju funkciju za validaciju poteza!
         // Ako je sve ok uradi sledeci kod
         // this.sendData(DataParser.encodeValidateMove(true))
         for (GameActionListener listener : this.listeners) {
-            listener.opponentMoveRecieved(move);
+            listener.opponentMoveRecieved(board);
         }
 
         // ako nije onda

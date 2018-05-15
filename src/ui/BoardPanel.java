@@ -1,11 +1,10 @@
 package ui;
 
-import commons.Field;
-import commons.GameData;
-import commons.GameType;
-import commons.Move;
+import commons.*;
 import logic.FlipField;
 import logic.TurnController;
+import socket.ConnectionManager;
+import socket.DataParser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +22,8 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
     private java.util.List<Integer> highlightedFields;
 
     private TurnController turnController;
+    private ConnectionManager connectionManager;
+
     private boolean onTurn;
     private boolean isHost;
     private boolean turnStarted = false;
@@ -68,7 +69,6 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
     }
 
     public void updateBoard(GameData gameData) {
-
         turnController = new TurnController(gameData.getBoard().getOrientation(), gameData.getBoard());
 
 
@@ -87,6 +87,9 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
 
     @Override
     public void fieldClicked(int j, boolean highlighted, Field type) {
+        if(!onTurn)
+            return;
+
         if((type.equals(Field.PLAYER_FIGURE) || type.equals(Field.PLAYER_QUEEN)) && !turnStarted) {
             if(highlighted) {
                 for(Integer i : this.highlightedFields)
@@ -114,9 +117,12 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
                 for(Integer i : this.highlightedFields)
                     blackFields[i].setHighlighted(false);
 
+                this.highlightedFields.clear();
+
                 if(turnController.isTurnOver()) {
-                    // TODO SEND DATA;
+                    connectionManager.sendData(DataParser.encodeMove(this.turnController.getBoard()));
                     turnStarted = false;
+                    onTurn = false;
                 } else {
                     blackFields[j].setHighlighted(true);
 
@@ -128,5 +134,17 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
                 }
             }
         }
+    }
+
+    public void setConnectionManager(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
+
+    public void moveReceived(Board board) {
+        turnController = new TurnController(isHost ? "PLAYER" : "ELSE",
+                board);
+
+        updateBoard();
+        onTurn = true;
     }
 }

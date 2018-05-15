@@ -1,6 +1,7 @@
 package socket;
 
-import commons.Move;
+import commons.Board;
+
 
 public abstract class DataListener {
 
@@ -12,7 +13,7 @@ public abstract class DataListener {
 
         switch (data.getCode()) {
             case DataParser.MOVE_CODE:
-                this.moveReceived((Move) data.getData());
+                this.moveReceived((Board) data.getData());
                 break;
             case DataParser.NICKNAME_CODE:
                 this.nicknameReceived((String) data.getData());
@@ -28,5 +29,5 @@ public abstract class DataListener {
 
     public abstract void validatedMoveReceived(boolean b);
 
-    public abstract void moveReceived(Move move);
+    public abstract void moveReceived(Board moves);
 }

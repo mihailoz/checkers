@@ -1,6 +1,7 @@
 package ui;
 
 import commons.GameData;
+import logic.FlipField;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,13 +18,13 @@ public class BoardPanel extends JPanel {
                     fields[i] = new FieldComponent();
                     fields[i].setBackground(Color.lightGray);
                 } else {
-                    fields[i] = new FieldComponent(j);
+                    fields[i] = new FieldComponent(FlipField.boardToLogic[j]);
                     j++;
                     fields[i].setBackground(Color.darkGray);
                 }
             } else {
                 if(i % 2 == 0) {
-                    fields[i] = new FieldComponent(j);
+                    fields[i] = new FieldComponent(FlipField.boardToLogic[j]);
                     j++;
                     fields[i].setBackground(Color.darkGray);
                 } else {

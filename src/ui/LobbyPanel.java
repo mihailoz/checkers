@@ -1,6 +1,6 @@
 package ui;
 
-import comm.GameType;
+import commons.GameType;
 
 import javax.swing.*;
 import java.awt.*;

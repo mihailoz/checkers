@@ -3,10 +3,11 @@ package logic;
 import commons.Field;
 import commons.Move;
 
-import javax.swing.text.html.HTMLDocument;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static logic.BoardCalculator.getLeftUp;
 
 public class TurnController {
 
@@ -15,12 +16,28 @@ public class TurnController {
     private ArrayList<Field> board;
     private int longestPath;
 
+    private int tableEnd;
+    private int direction;
+
     private int startPosition;
     private int distancePassed;
+
+    //TODO modify this part of the code to fit the right parameters
+    public TurnController(String player){
+        if(player.equals("PLAYER")){
+            tableEnd = 9;
+            direction = 1;
+        }
+        else{
+            tableEnd = 0;
+            direction = -1;
+        }
+    }
 
     //generates paths for the selected checker
     public void makePathsForField(int i){
         startPosition = i;
+        distancePassed = 0;
         paths = new ArrayList<>();
 
         //we only look at players checkers
@@ -36,14 +53,16 @@ public class TurnController {
         }
         //TODO instead of hardcoding 4 and 5, the values should be contained with client/host
         if(paths.size()==0){
-            if(checkBoarders(i,4) && board.get(i+4).equals(Field.EMPTY)){
+            int next = 4*direction;
+            if(checkBoarders(i,next) && board.get(i+next).equals(Field.EMPTY)){
                 ArrayList<Move> list = new ArrayList<>();
-                list.add(new Move(i, i+4, 1, board.get(i)));
+                list.add(new Move(i, i+next, 1, board.get(i)));
                 paths.add(list);
             }
-            if(checkBoarders(i,5) && board.get(i+5).equals(Field.EMPTY)){
+            next = 5*direction;
+            if(checkBoarders(i,next) && board.get(i+next).equals(Field.EMPTY)){
                 ArrayList<Move> list = new ArrayList<>();
-                list.add(new Move(i, i+5, 1, board.get(i)));
+                list.add(new Move(i, i+next, 1, board.get(i)));
                 paths.add(list);
             }
         }else{
@@ -53,6 +72,14 @@ public class TurnController {
                 if(l.size()<longestPath)
                     it.remove();
             }
+        }
+    }
+
+    //5-(i%10-1)%2 ili tako nesto
+    private void makePathsForQueen(int start){
+        int leftUp = getLeftUp(start);
+        if(leftUp!=-1){
+            //TODO continue...
         }
     }
 
@@ -142,6 +169,9 @@ public class TurnController {
         }
         distancePassed++;
     }
+
+
+
 }
 
 

@@ -1,3 +1,4 @@
+import commons.GameData;
 import ui.BoardPanel;
 
 import javax.swing.*;
@@ -7,6 +8,7 @@ public class TestUi {
         JFrame frame = new JFrame();
 
         BoardPanel panel = new BoardPanel();
+        panel.updateBoard(new GameData("PLAYER1", "PLAYER2"));
 
         frame = new JFrame("Checkers");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

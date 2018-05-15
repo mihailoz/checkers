@@ -6,6 +6,8 @@ import commons.Field;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +21,10 @@ public class FieldComponent extends JPanel {
     private static String BLACK_CHECKER_PATH = "./resources/black_checker.png";
 
     private BufferedImage image;
+    private boolean highlighted;
     private Field type;
+    private Color bgColor;
+    private FieldListener listener;
 
     public FieldComponent() {
         this(Field.EMPTY, null);
@@ -33,6 +38,7 @@ public class FieldComponent extends JPanel {
         setOpaque(true);
         this.setLayout(new GridBagLayout());
 
+        this.highlighted = false;
 
         this.setType(type);
 
@@ -48,7 +54,20 @@ public class FieldComponent extends JPanel {
             JLabel numberLabel = new JLabel(fieldNumber.toString());
             numberLabel.setForeground(Color.LIGHT_GRAY);
             add(numberLabel, c);
+
+            this.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    if(listener != null)
+                        listener.fieldClicked(fieldNumber, highlighted, FieldComponent.this.type);
+                }
+            });
         }
+    }
+
+    public void setListener(FieldListener listener) {
+        this.listener = listener;
     }
 
     public void setType(Field type) {
@@ -83,12 +102,35 @@ public class FieldComponent extends JPanel {
                 break;
         }
 
+        this.type = type;
         this.revalidate();
         this.repaint();
     }
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(60, 60);
+        return new Dimension(80, 80);
+    }
+
+    public boolean isHighlighted() {
+        return highlighted;
+    }
+
+    public void setHighlighted(boolean highlighted) {
+        if(this.highlighted == highlighted)
+            return;
+
+        this.highlighted = highlighted;
+
+        if(highlighted) {
+            this.bgColor = this.getBackground();
+            this.setBackground(Color.CYAN);
+        } else {
+            this.setBackground(this.bgColor);
+        }
+    }
+
+    public interface FieldListener {
+        void fieldClicked(int j, boolean highlighted, Field type);
     }
 }

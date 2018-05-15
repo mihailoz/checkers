@@ -2,10 +2,15 @@ package ui;
 
 import commons.Field;
 import commons.GameData;
+import logic.FlipField;
+import logic.TurnController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+
+import static logic.FlipField.boardToLogic;
+import static logic.FlipField.logicToBoard;
 
 public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
 
@@ -13,6 +18,8 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
     private FieldComponent[] blackFields = new FieldComponent[50];
 
     private java.util.List<Integer> highlightedFields;
+
+    private TurnController turnController;
 
     public BoardPanel() {
         highlightedFields = new ArrayList<>();
@@ -52,6 +59,10 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
     }
 
     public void updateBoard(GameData gameData) {
+        //TODO getboardgetboard NO
+        turnController = new TurnController("PLAYER",
+                FlipField.convertBoardToLogic(gameData.getBoard().getBoard()));
+
         for(int i = 0; i < gameData.getBoard().getSize(); i++) {
             blackFields[i].setType(gameData.getBoard().getField(i));
         }
@@ -70,6 +81,14 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
                 this.highlightedFields.clear();
                 blackFields[j - 1].setHighlighted(true);
                 this.highlightedFields.add(j - 1);
+
+                int convertedBTL = boardToLogic[j];
+                turnController.makePathsForField(convertedBTL);
+                java.util.List<Integer> fields = turnController.availableFields();
+                for(Integer i : fields) {
+                    blackFields[logicToBoard[i] - 1].setHighlighted(true);
+                    this.highlightedFields.add(logicToBoard[i] - 1);
+                }
             }
         }
     }

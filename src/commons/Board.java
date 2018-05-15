@@ -2,6 +2,10 @@ package commons;
 
 public class Board {
 
+    public Field[] getBoard() {
+        return board;
+    }
+
     private Field[] board;
 
     public Board() {

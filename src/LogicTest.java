@@ -7,13 +7,21 @@ public class LogicTest {
 
         clearBoard(board);
 
-        board[16] = Field.PLAYER_QUEEN;
+        queenTest(board);
 
-        board[22] = Field.OPPONENT_FIGURE;
-        //board[5] = Field.OPPONENT_FIGURE;
 
         TurnController controller = new TurnController("PLAYER", board);
         controller.makePathsForField(16);
+        for(Integer i: controller.availableFields())
+            System.out.println(i);
+        controller.choosePath(27);
+
+        for(Integer i: controller.availableFields())
+            System.out.println(i);
+
+        controller.choosePath(36);
+
+        System.out.println("ako izbaci nista to je mozda ok");
         for(Integer i: controller.availableFields())
             System.out.println(i);
     }
@@ -30,6 +38,16 @@ public class LogicTest {
     static void clearBoard(Field[] board){
         for(int i = 0;i<50;i++)
             board[i] = Field.EMPTY;
+    }
+
+    static void queenTest(Field[] board){
+        board[16] = Field.PLAYER_QUEEN;
+
+        board[22] = Field.OPPONENT_FIGURE;
+
+        board[32] = Field.OPPONENT_FIGURE;
+
+        board[33] = Field.OPPONENT_FIGURE;
     }
 
 }

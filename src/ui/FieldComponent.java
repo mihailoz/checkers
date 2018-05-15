@@ -127,6 +127,10 @@ public class FieldComponent extends JPanel {
         this.repaint();
     }
 
+    public Field getType() {
+        return this.type;
+    }
+
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(80, 80);

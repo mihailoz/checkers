@@ -25,6 +25,7 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
     private TurnController turnController;
     private boolean onTurn;
     private boolean isHost;
+    private boolean turnStarted = false;
 
     public BoardPanel(boolean isHost) {
         highlightedFields = new ArrayList<>();
@@ -76,9 +77,17 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
         }
     }
 
+    public void updateBoard() {
+        for(int i = 1; i < turnController.getBoard().getSize(); i++) {
+            if(!blackFields[i].getType().equals(turnController.getBoard().getField(i))) {
+                blackFields[i].setType(turnController.getBoard().getField(i), isHost);
+            }
+        }
+    }
+
     @Override
     public void fieldClicked(int j, boolean highlighted, Field type) {
-        if(type.equals(Field.PLAYER_FIGURE) || type.equals(Field.PLAYER_QUEEN)) {
+        if((type.equals(Field.PLAYER_FIGURE) || type.equals(Field.PLAYER_QUEEN)) && !turnStarted) {
             if(highlighted) {
                 for(Integer i : this.highlightedFields)
                     blackFields[i].setHighlighted(false);
@@ -97,8 +106,27 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
                     this.highlightedFields.add(i);
                 }
             }
-        } else if (highlighted) {
+        } else if (highlighted && type.equals(Field.EMPTY)) {
+            if(turnController.availableFields().contains(j)) {
+                turnController.choosePath(j);
+                updateBoard();
 
+                for(Integer i : this.highlightedFields)
+                    blackFields[i].setHighlighted(false);
+
+                if(turnController.isTurnOver()) {
+                    // TODO SEND DATA;
+                    turnStarted = false;
+                } else {
+                    blackFields[j].setHighlighted(true);
+
+                    for (Integer i : turnController.availableFields()) {
+                        blackFields[i].setHighlighted(true);
+                    }
+
+                    turnStarted = true;
+                }
+            }
         }
     }
 }

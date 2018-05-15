@@ -4,13 +4,13 @@ public class Move {
 
     private int startPosition, endPosition;
     private int eatenPosition;
-    private Field checker;
+    private Field figure;
 
-    public Move(int startPosition, int endPosition, int eaten, Field checker) {
+    public Move(int startPosition, int endPosition, int eaten, Field figure) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
         this.eatenPosition = eaten;
-        this.checker = checker;
+        this.figure = figure;
 
     }
 
@@ -26,6 +26,6 @@ public class Move {
         return eatenPosition;
     }
 
-    public Field getChecker(){  return checker; }
+    public Field getFigure(){  return figure; }
 
 }

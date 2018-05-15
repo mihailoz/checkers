@@ -191,10 +191,13 @@ public class TurnController {
             }
         }if(m!=null) {
             board.setField(Field.EMPTY, m.getStartPosition());
-            board.setField(Field.EMPTY, m.getEatenPosition());
-            board.setField(m.getChecker(), m.getEndPosition());
+
+            if(m.getEatenPosition() != -1)
+                board.setField(Field.EMPTY, m.getEatenPosition());
+
+            board.setField(m.getFigure(), m.getEndPosition());
             if((m.getEndPosition()-1)/5==tableEnd){
-                if(m.getChecker()==Field.PLAYER_FIGURE)
+                if(m.getFigure()==Field.PLAYER_FIGURE)
                     board.setField(Field.PLAYER_QUEEN, m.getEndPosition());
             }
         }
@@ -207,8 +210,9 @@ public class TurnController {
         return turnOver;
     }
 
-
-
+    public Board getBoard() {
+        return board;
+    }
 }
 
 

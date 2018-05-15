@@ -20,27 +20,21 @@ public class FieldComponent extends JPanel {
     private static String WHITE_CHECKER_PATH = "./resources/white_checker.png";
     private static String BLACK_CHECKER_PATH = "./resources/black_checker.png";
 
-    private BufferedImage image;
+    private JLabel imageContainer;
     private boolean highlighted;
     private Field type;
     private Color bgColor;
     private FieldListener listener;
 
     public FieldComponent() {
-        this(Field.EMPTY, null);
+        this(null);
     }
 
-    public FieldComponent(int fieldNumber) {
-        this(Field.EMPTY, fieldNumber);
-    }
-
-    public FieldComponent(Field type, Integer fieldNumber) {
+    public FieldComponent(Integer fieldNumber) {
         setOpaque(true);
         this.setLayout(new GridBagLayout());
 
         this.highlighted = false;
-
-        this.setType(type);
 
         if(fieldNumber != null) {
             GridBagConstraints c = new GridBagConstraints();
@@ -70,7 +64,7 @@ public class FieldComponent extends JPanel {
         this.listener = listener;
     }
 
-    public void setType(Field type) {
+    public void setType(Field type, boolean isHost) {
         if(type.equals(this.type))
             return;
 
@@ -83,22 +77,46 @@ public class FieldComponent extends JPanel {
         c.weightx = 1.0;
         c.weighty = 1.0;
 
+
+        BufferedImage image;
         switch (type) {
             case PLAYER_FIGURE:
                 try {
-                    image = ImageIO.read(new File(WHITE_CHECKER_PATH));
-                    this.add(new JLabel(new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_FAST))), c);
+                    if(isHost)
+                        image = ImageIO.read(new File(WHITE_CHECKER_PATH));
+                    else
+                        image = ImageIO.read(new File(BLACK_CHECKER_PATH));
+
+                    if(imageContainer != null)
+                        this.remove(imageContainer);
+
+                    imageContainer = new JLabel(new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_FAST)));
+                    this.add(imageContainer, c);
                 } catch (IOException ex) {
                     // handle exception...
                 }
                 break;
             case OPPONENT_FIGURE:
                 try {
-                    image = ImageIO.read(new File(BLACK_CHECKER_PATH));
-                    this.add(new JLabel(new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_FAST))), c);
+                    if(isHost)
+                        image = ImageIO.read(new File(BLACK_CHECKER_PATH));
+                    else
+                        image = ImageIO.read(new File(WHITE_CHECKER_PATH));
+
+                    if(imageContainer != null)
+                        this.remove(imageContainer);
+
+                    imageContainer = new JLabel(new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_FAST)));
+                    this.add(imageContainer, c);
                 } catch (IOException ex) {
                     // handle exception...
                 }
+                break;
+            case EMPTY:
+                if(imageContainer != null)
+                    this.remove(imageContainer);
+
+                imageContainer = null;
                 break;
         }
 

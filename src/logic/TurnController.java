@@ -27,8 +27,8 @@ public class TurnController {
     private Calculator rightCalc;
 
     //TODO modify this part of the code to fit the right parameters
-    public TurnController(String player, Field[] board){
-        this.board = new ArrayList<Field>(Arrays.asList(board));
+    public TurnController(String player, Board board){
+        this.board = new ArrayList<Field>(Arrays.asList(board.getFields()));
         if(player.equals("PLAYER")){
             tableEnd = 9;
             leftCalc = BoardCalculator.getLeftUp2();

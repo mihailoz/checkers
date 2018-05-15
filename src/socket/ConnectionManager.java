@@ -129,7 +129,7 @@ public class ConnectionManager extends DataListener {
         return nickname;
     }
 
-    public GameType getType() {
-        return this.getType();
+    public GameType getGameType() {
+        return this.type;
     }
 }

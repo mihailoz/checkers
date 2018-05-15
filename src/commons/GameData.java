@@ -8,12 +8,12 @@ public class GameData {
     private String playerNick, opponentNick;
     private ArrayList<Move> moveHistory;
 
-    public GameData(String player, String opponent) {
+    public GameData(String player, String opponent, boolean isHost) {
         this.moveHistory = new ArrayList<>();
         this.playerNick = player;
         this.opponentNick = opponent;
         this.board = new Board();
-        this.board.resetBoard();
+        this.board.resetBoard(isHost);
     }
 
     public void addMove(Move move) {

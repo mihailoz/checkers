@@ -2,11 +2,14 @@ package ui;
 
 import commons.Field;
 import commons.GameData;
+import commons.GameType;
+import commons.Move;
 import logic.FlipField;
 import logic.TurnController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static logic.FlipField.boardToLogic;
@@ -20,9 +23,14 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
     private java.util.List<Integer> highlightedFields;
 
     private TurnController turnController;
+    private boolean onTurn;
+    private boolean isHost;
 
-    public BoardPanel() {
+    public BoardPanel(boolean isHost) {
         highlightedFields = new ArrayList<>();
+
+        this.onTurn = isHost;
+        this.isHost = isHost;
 
         int j = 1;
         for(int i = 0; i < fields.length; i++) {
@@ -59,11 +67,10 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
     }
 
     public void updateBoard(GameData gameData) {
-        //TODO getboardgetboard NO
-        turnController = new TurnController("PLAYER", gameData.getBoard().getBoard());
+        turnController = new TurnController(gameData.getBoard().getOrientation(), gameData.getBoard());
 
         for(int i = 1; i < gameData.getBoard().getSize(); i++) {
-            blackFields[i].setType(gameData.getBoard().getField(i));
+            blackFields[i].setType(gameData.getBoard().getField(i), isHost);
         }
     }
 
@@ -88,6 +95,8 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
                     this.highlightedFields.add(i);
                 }
             }
+        } else if (highlighted) {
+
         }
     }
 }

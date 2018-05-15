@@ -1,15 +1,12 @@
+import commons.Board;
 import commons.Field;
 import logic.TurnController;
 
 public class LogicTest {
     public static void main(String[] args){
-        Field[] board = new Field[50];
-
-        normalBoard(board);
 
 
-
-        TurnController controller = new TurnController("PLAYER", board);
+        TurnController controller = new TurnController("PLAYER", new Board());
         controller.makePathsForField(19);
         for(int i : controller.availableFields()){
             System.out.println(i);

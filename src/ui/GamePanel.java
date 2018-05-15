@@ -1,6 +1,8 @@
 package ui;
 
 import commons.GameData;
+import commons.GameType;
+import logic.TurnController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,21 +12,22 @@ public class GamePanel extends JPanel {
     private BoardPanel boardPanel;
     private GameData gameData;
     private PlayerPanel playerPanel, opponentPanel;
+    private TurnController turnController;
 
-    public GamePanel() {
+    public GamePanel(GameType gt) {
         this.setLayout(new BorderLayout());
 
-        boardPanel = new BoardPanel();
+        boolean isHost = gt.equals(GameType.HOST);
+
+        boardPanel = new BoardPanel(isHost);
 
         this.add(boardPanel, BorderLayout.CENTER);
 
-        playerPanel = new PlayerPanel();
+        playerPanel = new PlayerPanel(isHost);
+        opponentPanel = new PlayerPanel(!isHost);
 
-        this.add(playerPanel, BorderLayout.SOUTH);
-
-        opponentPanel = new PlayerPanel();
-
-        this.add(opponentPanel, BorderLayout.NORTH);
+        this.add(opponentPanel, isHost ? BorderLayout.NORTH : BorderLayout.SOUTH);
+        this.add(playerPanel, isHost ? BorderLayout.SOUTH : BorderLayout.NORTH);
     }
 
     public void setPlayerNick(String nick) {

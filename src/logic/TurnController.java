@@ -1,13 +1,15 @@
 package logic;
 
+import commons.Board;
 import commons.Field;
 import commons.Move;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import static logic.BoardCalculator.getLeftUp;
+import static logic.BoardCalculator.*;
 
 public class TurnController {
 
@@ -23,7 +25,8 @@ public class TurnController {
     private int distancePassed;
 
     //TODO modify this part of the code to fit the right parameters
-    public TurnController(String player){
+    public TurnController(String player, Field[] board){
+        this.board = new ArrayList<Field>(Arrays.asList(board));
         if(player.equals("PLAYER")){
             tableEnd = 9;
             direction = 1;
@@ -38,11 +41,29 @@ public class TurnController {
     public void makePathsForField(int i){
         startPosition = i;
         distancePassed = 0;
+        longestPath = -1;
         paths = new ArrayList<>();
-
-        //we only look at players checkers
         Field f = board.get(i);
-        if(f.equals(Field.PLAYER_FIGURE) || f.equals(Field.PLAYER_QUEEN)){
+
+        //if the checker is a queen
+        if(f.equals(Field.PLAYER_QUEEN)){
+            makePathsForQueen(i,board,new ArrayList<Move>());
+            if(paths.size()==0){
+                int counter = 0;
+                for(Calculator c : directions()){
+                    int next = c.getNext(i);
+                    while(next!=-1 && board.get(next)==Field.EMPTY){
+                        ArrayList<Move> simpleList = new ArrayList<>();
+                        simpleList.add(new Move(i, next, 1, Field.EMPTY));
+                        paths.add(simpleList);
+                        next = c.getNext(next);
+                    }
+                }
+            }
+        }
+
+
+        if(f.equals(Field.PLAYER_FIGURE)){
             tryMove(i, i + 9, new ArrayList<Move>(), new ArrayList<Field>(board));
 
             tryMove(i, i + 11, new ArrayList<Move>(), new ArrayList<Field>(board));
@@ -53,13 +74,13 @@ public class TurnController {
         }
         //TODO instead of hardcoding 4 and 5, the values should be contained with client/host
         if(paths.size()==0){
-            int next = 4*direction;
-            if(checkBoarders(i,next) && board.get(i+next).equals(Field.EMPTY)){
+            int next = BoardCalculator.getLeftUp().getNext(i);
+            if(next!=-1 && board.get(i+next).equals(Field.EMPTY)){
                 ArrayList<Move> list = new ArrayList<>();
                 list.add(new Move(i, i+next, 1, board.get(i)));
                 paths.add(list);
             }
-            next = 5*direction;
+            next = BoardCalculator.getRightUp().getNext(i);
             if(checkBoarders(i,next) && board.get(i+next).equals(Field.EMPTY)){
                 ArrayList<Move> list = new ArrayList<>();
                 list.add(new Move(i, i+next, 1, board.get(i)));
@@ -75,13 +96,7 @@ public class TurnController {
         }
     }
 
-    //5-(i%10-1)%2 ili tako nesto
-    private void makePathsForQueen(int start){
-        int leftUp = getLeftUp(start);
-        if(leftUp!=-1){
-            //TODO continue...
-        }
-    }
+
 
     //goes thru the board, finding all the paths
     private void tryMove(int start, int end, ArrayList<Move> list,
@@ -97,13 +112,15 @@ public class TurnController {
             terminalState = true;
         }
 
-        Field endField = board.get(end);
-        Field middleField = board.get(middle);
+        if(!terminalState) {
+            Field endField = board.get(end);
+            Field middleField = board.get(middle);
 
-        if(!endField.equals(Field.EMPTY) ||
-                !(middleField.equals(Field.OPPONENT_FIGURE) ||
-                        (middleField.equals(Field.OPPONENT_QUEEN)))){
-            terminalState = true;
+            if (!endField.equals(Field.EMPTY) ||
+                    !(middleField.equals(Field.OPPONENT_FIGURE) ||
+                            (middleField.equals(Field.OPPONENT_QUEEN)))) {
+                terminalState = true;
+            }
         }
 
 
@@ -123,7 +140,7 @@ public class TurnController {
 
             tryMove(end, end - 11, listCopy, boardCopy);
         }else{
-            if(list.size() >= longestPath){
+            if(list.size() >= longestPath && list.size()!=0){
                 longestPath = list.size();
                 paths.add(list);
             }
@@ -131,26 +148,45 @@ public class TurnController {
 
     }
 
-    //makes sure that we can jump on the side we chose
-    private boolean checkBoarders(int start, int diff){
-        if(diff == 9){
-            if(start%5 == 0 || start/10==4)
-                return false;
-        }else if(diff == 11){
-            if(start%5==4 ||start/10==4)
-                return false;
-        }else if(diff == -9){
-            if(start%5==4 || start/10 == 0)
-                return  false;
-        }
-        else if(diff == -11){
-            if(start%5 == 0 || start/10 == 0)
-                return false;
-        }
-        return true;
+
+    private void makePathsForPawn(int start, ArrayList<Field> board, ArrayList<Move> list){
+
     }
 
+    //5-(i%10-1)%2 ili tako nesto
+    private void makePathsForQueen(int start, ArrayList<Field> board, ArrayList<Move> list){
+        boolean terminalState = true;
+
+        for(Calculator c: directions()) {
+            int next = c.getNext(start);
+            while(next!=-1 && (board.get(next)!=Field.OPPONENT_FIGURE && board.get(next)!=Field.OPPONENT_QUEEN)){
+                next = c.getNext(next);
+            }
+            if(next!=-1 & c.getNext(next)!=-1){
+                ArrayList<Field> boardCopy = new ArrayList<>(board);
+                boardCopy.set(next, Field.EMPTY);
+                next = c.getNext(next);
+                while(next!=-1 || board.get(next)==Field.EMPTY){
+                    ArrayList<Move> listCopy = new ArrayList<>(list);
+                    listCopy.add(new Move(start, next,1, board.get(next)));
+                    makePathsForQueen(next,boardCopy, listCopy);
+                    terminalState = false;
+                }
+            }
+        }
+
+        if(terminalState){
+            if(list.size()>=longestPath && list.size()!=0){
+                longestPath = list.size();
+                paths.add(list);
+            }
+        }
+    }
+
+
+
     //TODO a function that returns next possible fields after the piece is moved
+    //this is kind of it, but it needs to be better
     public List<Integer> availableFields(){
         ArrayList<Integer> list = new ArrayList<>();
         for(List<Move> l : paths){

@@ -6,7 +6,6 @@ import commons.Move;
 import socket.ConnectionManager;
 
 import javax.swing.*;
-import java.util.logging.Logger;
 
 public class UIController implements LobbyPanel.LobbyListener, GameActionListener {
 
@@ -49,7 +48,7 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
 
     @Override
     public void opponentNicknameRecieved(String nickname) {
-        gameData = new GameData(connectionManager.getNickname(), nickname);
+        gameData = new GameData(connectionManager.getNickname(), nickname, connectionManager.getGameType().equals(GameType.HOST));
 
         if(gamePanel != null) {
             gamePanel.setOpponentNick(nickname);
@@ -63,7 +62,7 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
     public void gameStarted() {
         // OVDE TREBA PRIKAZATI TABLU, trebace vam da li je korisnik crni ili beli
         // to sam napravio da ako je host onda je beli, ako je gost onda je crn
-        // mozete proveriti sta je preko funkcije connectionManager.getType()
+        // mozete proveriti sta je preko funkcije connectionManager.getGameType()
         // dobicete ili GameType.JOIN ili GameType.HOST
         // moj predlog je da prvo samo prikazete tablu sa figurama, posle cemo lako to povezati da se pomera
         // po nahodjenju igraca
@@ -76,7 +75,7 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
         System.out.println("GAME STARTED");
         frame.remove(lobbyPanel);
 
-        gamePanel = new GamePanel();
+        gamePanel = new GamePanel(this.connectionManager.getGameType());
 
         if(gameData != null) {
             gamePanel.setPlayerNick(gameData.getPlayerNick());

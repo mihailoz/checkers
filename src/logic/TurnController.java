@@ -31,6 +31,7 @@ public class TurnController {
 
     //TODO modify this part of the code to fit the right parameters
     public TurnController(String player, Board board){
+
         this.board = board;
         this.fields = new ArrayList<Field>(Arrays.asList(board.getFields()));
         if(player.equals("PLAYER")){

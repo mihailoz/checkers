@@ -23,14 +23,17 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
 
     private TurnController turnController;
     private ConnectionManager connectionManager;
+    private DialogListener dialogListener;
 
     private boolean onTurn;
     private boolean isHost;
     private boolean turnStarted = false;
 
-    public BoardPanel(boolean isHost) {
+    public BoardPanel(boolean isHost, DialogListener dialogListener) {
         highlightedFields = new ArrayList<>();
 
+
+        this.dialogListener = dialogListener;
         this.onTurn = isHost;
         this.isHost = isHost;
 
@@ -77,11 +80,15 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
         }
     }
 
-    public void updateBoard() {
+    public void updateBoard(boolean opponentsTurn) {
         for(int i = 1; i < turnController.getBoard().getSize(); i++) {
             if(!blackFields[i].getType().equals(turnController.getBoard().getField(i))) {
                 blackFields[i].setType(turnController.getBoard().getField(i), isHost);
             }
+        }
+
+        if(opponentsTurn && turnController.isGameOver()) {
+            GameOverDialog god = new GameOverDialog(dialogListener, false, isHost);
         }
     }
 
@@ -112,7 +119,11 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
         } else if (highlighted && type.equals(Field.EMPTY)) {
             if(turnController.availableFields().contains(j)) {
                 turnController.choosePath(j);
-                updateBoard();
+                updateBoard(false);
+
+                if(turnController.isGameOver()) {
+                    GameOverDialog god = new GameOverDialog(dialogListener, true, isHost);
+                }
 
                 for(Integer i : this.highlightedFields)
                     blackFields[i].setHighlighted(false);
@@ -134,6 +145,8 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
 
                     turnStarted = true;
                 }
+
+                System.out.println("Played move: " + j);
             }
         }
     }
@@ -146,7 +159,8 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
         turnController = new TurnController(isHost ? "PLAYER" : "ELSE",
                 board);
 
-        updateBoard();
+        updateBoard(true);
+        System.out.println("Move recieved");
         onTurn = true;
     }
 }

@@ -13,6 +13,7 @@ public class WaitDialog extends JDialog implements ActionListener {
 
     public WaitDialog(DialogListener listener) {
         this.listener = listener;
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         setLayout(new BorderLayout());
 

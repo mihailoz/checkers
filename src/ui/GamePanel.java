@@ -7,7 +7,6 @@ import socket.ConnectionManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class GamePanel extends JPanel {
 
@@ -15,12 +14,12 @@ public class GamePanel extends JPanel {
     private GameData gameData;
     private PlayerPanel playerPanel, opponentPanel;
 
-    public GamePanel(GameType gt) {
+    public GamePanel(GameType gt, DialogListener listener) {
         this.setLayout(new BorderLayout());
 
         boolean isHost = gt.equals(GameType.HOST);
 
-        boardPanel = new BoardPanel(isHost);
+        boardPanel = new BoardPanel(isHost, listener);
 
         this.add(boardPanel, BorderLayout.CENTER);
 

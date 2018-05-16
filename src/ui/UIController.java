@@ -77,7 +77,14 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
         System.out.println("GAME STARTED");
         frame.remove(lobbyPanel);
 
-        gamePanel = new GamePanel(this.connectionManager.getGameType());
+        gamePanel = new GamePanel(this.connectionManager.getGameType(), new DialogListener() {
+            @Override
+            public void dialogClosed() {
+                frame.remove(gamePanel);
+                frame.add(lobbyPanel);
+                frame.pack();
+            }
+        });
 
         if(gameData != null) {
             gamePanel.setPlayerNick(gameData.getPlayerNick());

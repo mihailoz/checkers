@@ -7,7 +7,7 @@ public class TestUi {
     public static void main(String[] args){
         JFrame frame = new JFrame();
 
-        BoardPanel panel = new BoardPanel(true);
+        BoardPanel panel = new BoardPanel(true, null);
         panel.updateBoard(new GameData("PLAYER1", "PLAYER2", true));
 
         frame = new JFrame("Checkers");

@@ -17,11 +17,11 @@ public class Board {
         for(int i = 1; i < 51; i++)
             setField(Field.EMPTY, i);
 
-        for(int i = 1; i < 2; i++)
+        for(int i = 1; i < 21; i++)
             setField(isHost ? Field.OPPONENT_FIGURE : Field.PLAYER_FIGURE, i);
 
 
-        for(int i = 7; i < 8; i++)
+        for(int i = 31; i < 51; i++)
             setField(isHost ? Field.PLAYER_FIGURE : Field.OPPONENT_FIGURE, i);
 
         this.orientation = isHost ? "PLAYER" : "GUEST";

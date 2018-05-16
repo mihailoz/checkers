@@ -180,7 +180,7 @@ public class FieldComponent extends JPanel {
 
         if(highlighted) {
             this.bgColor = this.getBackground();
-            this.setBackground(Color.CYAN);
+            this.setBackground(new Color(17, 160, 173));
         } else {
             this.setBackground(this.bgColor);
         }

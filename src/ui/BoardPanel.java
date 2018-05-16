@@ -24,15 +24,16 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
     private TurnController turnController;
     private ConnectionManager connectionManager;
     private DialogListener dialogListener;
+    private BoardListener boardListener;
 
     private boolean onTurn;
     private boolean isHost;
     private boolean turnStarted = false;
 
-    public BoardPanel(boolean isHost, DialogListener dialogListener) {
+    public BoardPanel(boolean isHost, DialogListener dialogListener, BoardListener boardListener) {
         highlightedFields = new ArrayList<>();
 
-
+        this.boardListener = boardListener;
         this.dialogListener = dialogListener;
         this.onTurn = isHost;
         this.isHost = isHost;
@@ -130,7 +131,9 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
                 this.highlightedFields.clear();
 
                 if(turnController.isTurnOver()) {
-                    connectionManager.sendData(DataParser.encodeMove(this.turnController.getBoard()));
+                    connectionManager.sendData(DataParser.encodeMove(this.turnController.getBoard(), this.turnController.returnCompleteMove()));
+                    if(boardListener != null)
+                        boardListener.movePlayed(turnController.returnCompleteMove());
                     turnStarted = false;
                     onTurn = false;
                 } else {
@@ -167,5 +170,9 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
         GameOverDialog god = new GameOverDialog(dialogListener, true, isHost);
         god.setLocationRelativeTo(this);
         god.setVisible(true);
+    }
+
+    public interface BoardListener {
+        void movePlayed(Move move);
     }
 }

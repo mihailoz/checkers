@@ -31,17 +31,46 @@ public class DataParser {
         }
     }
 
-    public static String encodeMove(Board board) {
-        StringBuilder move = new StringBuilder();
-        move.append(String.valueOf(MOVE_CODE));
-        move.append(";");
+    public static class MoveData {
+        private Board board;
+        private int startPosition;
+        private int endPosition;
 
-        for(int i = 1; i < board.getSize(); i++) {
-            move.append(board.getField(i).toInteger());
-            move.append(" ");
+        public MoveData(Board board, int startPosition, int endPosition) {
+            this.board = board;
+            this.startPosition = startPosition;
+            this.endPosition = endPosition;
         }
 
-        return move.toString();
+        public Board getBoard() {
+            return board;
+        }
+
+        public int getStartPosition() {
+            return startPosition;
+        }
+
+        public int getEndPosition() {
+            return endPosition;
+        }
+    }
+
+    public static String encodeMove(Board board, Move move) {
+        StringBuilder str = new StringBuilder();
+        str.append(String.valueOf(MOVE_CODE));
+        str.append(";");
+
+        for(int i = 1; i < board.getSize(); i++) {
+            str.append(board.getField(i).toInteger());
+            str.append(" ");
+        }
+
+        str.append(";");
+        str.append(String.valueOf(move.getStartPosition()));
+        str.append(";");
+        str.append(String.valueOf(move.getEndPosition()));
+
+        return str.toString();
     }
 
     public static String encodeVictory() {
@@ -67,7 +96,7 @@ public class DataParser {
         }
     }
 
-    public static Board decodeMove(String data) {
+    public static MoveData decodeMove(String data) {
         String[] splitted = data.split(";");
 
         String[] ints = splitted[1].split(" ");
@@ -86,6 +115,6 @@ public class DataParser {
 
         board.reversePlayers();
 
-        return board;
+        return new MoveData(board, Integer.parseInt(splitted[2]), Integer.parseInt(splitted[3]));
     }
 }

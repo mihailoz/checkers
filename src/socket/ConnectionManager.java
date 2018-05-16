@@ -116,12 +116,12 @@ public class ConnectionManager extends DataListener {
     }
 
     @Override
-    public void moveReceived(Board board) {
+    public void moveReceived(DataParser.MoveData moveData) {
         // Aleksa ovde pozovi svoju funkciju za validaciju poteza!
         // Ako je sve ok uradi sledeci kod
         // this.sendData(DataParser.encodeValidateMove(true))
         for (GameActionListener listener : this.listeners) {
-            listener.opponentMoveRecieved(board);
+            listener.opponentMoveRecieved(moveData);
         }
 
         // ako nije onda

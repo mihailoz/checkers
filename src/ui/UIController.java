@@ -4,6 +4,7 @@ import commons.Board;
 import commons.GameData;
 import commons.GameType;
 import socket.ConnectionManager;
+import socket.DataParser;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -128,10 +129,12 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
     }
 
     @Override
-    public void opponentMoveRecieved(Board board) {
+    public void opponentMoveRecieved(DataParser.MoveData moveData) {
         // Dobili ste protivnicki potez, treba da pomerite figuru po podacimo iz Move argumenta ove funkcije
         // pogledajte move, trebalo bi da ima dovoljno podataka, ako vam treba jos nesto dodajte
-        gamePanel.getBoardPanel().moveReceived(board);
+        gamePanel.getBoardPanel().moveReceived(moveData.getBoard());
+        gamePanel.setPlayerTurn();
+        gamePanel.getHistoryPanel().addOpponentMove(moveData.getStartPosition(), moveData.getEndPosition());
     }
 
     @Override

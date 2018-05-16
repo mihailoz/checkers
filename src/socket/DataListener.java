@@ -13,7 +13,7 @@ public abstract class DataListener {
 
         switch (data.getCode()) {
             case DataParser.MOVE_CODE:
-                this.moveReceived((Board) data.getData());
+                this.moveReceived((DataParser.MoveData) data.getData());
                 break;
             case DataParser.NICKNAME_CODE:
                 this.nicknameReceived((String) data.getData());
@@ -29,5 +29,5 @@ public abstract class DataListener {
 
     public abstract void victoryReceived();
 
-    public abstract void moveReceived(Board moves);
+    public abstract void moveReceived(DataParser.MoveData moves);
 }

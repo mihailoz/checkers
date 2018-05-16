@@ -1,9 +1,7 @@
 package ui;
 
-import commons.Board;
-import commons.Move;
+import socket.DataParser;
 
-import java.util.ArrayList;
 
 public interface GameActionListener {
 
@@ -11,7 +9,7 @@ public interface GameActionListener {
     void gameStarted();
     void hostSocketOpened();
     void clientConnected();
-    void opponentMoveRecieved(Board board);
+    void opponentMoveRecieved(DataParser.MoveData board);
     void victory();
 
 }

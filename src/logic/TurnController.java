@@ -22,7 +22,6 @@ public class TurnController {
     private Field player;
 
     private int tableEnd;
-    private int direction;
 
     private int startPosition;
     private boolean lockdown;
@@ -30,6 +29,7 @@ public class TurnController {
     private Calculator leftCalc;
     private Calculator rightCalc;
     private boolean turnOver;
+    private Move completeMove;
 
     //TODO modify this part of the code to fit the right parameters
     public TurnController(String player, Board board){
@@ -41,11 +41,9 @@ public class TurnController {
             tableEnd = 0;
             leftCalc = BoardCalculator.getLeftUp2();
             rightCalc = BoardCalculator.getRightUp2();
-            direction = 1;
         }
         else{
             tableEnd = 9;
-            direction = -1;
             leftCalc = BoardCalculator.getLeftDown2();
             rightCalc = BoardCalculator.getRightDown2();
         }
@@ -215,8 +213,10 @@ public class TurnController {
             }
         }
         distancePassed++;
-        if(distancePassed==longestPath)
+        if(distancePassed==longestPath) {
             turnOver = true;
+            completeMove = new Move(startPosition, m.getEndPosition(), -1, null);
+        }
     }
 
     public boolean isTurnOver(){
@@ -225,6 +225,21 @@ public class TurnController {
 
     public Board getBoard() {
         return board;
+    }
+
+    public boolean isGameOver(){
+        for(int i=1;i<51;i++){
+            if(fields.get(i)==Field.PLAYER_FIGURE || fields.get(i) == Field.PLAYER_QUEEN){
+                makePathsForField(i);
+                if(availableFields().size()!=0)
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public Move returnCompleteMove(){
+        return completeMove;
     }
 
 

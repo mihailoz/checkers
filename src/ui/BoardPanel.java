@@ -120,15 +120,16 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
                 this.highlightedFields.clear();
 
                 if(turnController.isTurnOver()) {
-
                     connectionManager.sendData(DataParser.encodeMove(this.turnController.getBoard()));
                     turnStarted = false;
                     onTurn = false;
                 } else {
                     blackFields[j].setHighlighted(true);
+                    highlightedFields.add(j);
 
                     for (Integer i : turnController.availableFields()) {
                         blackFields[i].setHighlighted(true);
+                        highlightedFields.add(i);
                     }
 
                     turnStarted = true;

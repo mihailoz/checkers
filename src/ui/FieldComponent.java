@@ -17,10 +17,10 @@ import java.io.IOException;
  */
 public class FieldComponent extends JPanel {
 
-    private static String WHITE_CHECKER_PATH = "./resources/whiteChecker2.png";
-    private static String BLACK_CHECKER_PATH = "./resources/blackChecker2.png";
-    private static String WHITE_QUEEN_PATH = "./resources/whiteQueen.png";
-    private static String BLACK_QUEEN_PATH = "./resources/blackQueen.png";
+    private static String WHITE_CHECKER_PATH = "./resources/rebellion_checker.png";
+    private static String BLACK_CHECKER_PATH = "./resources/empire_checker.png";
+    private static String WHITE_QUEEN_PATH = "./resources/rebellion_queen.png";
+    private static String BLACK_QUEEN_PATH = "./resources/empire_queen.png";
 
     private JLabel imageContainer;
     private boolean highlighted;
@@ -92,7 +92,7 @@ public class FieldComponent extends JPanel {
                     if(imageContainer != null)
                         this.remove(imageContainer);
 
-                    imageContainer = new JLabel(new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_FAST)));
+                    imageContainer = new JLabel(new ImageIcon(image.getScaledInstance(60, 60, Image.SCALE_FAST)));
                     this.add(imageContainer, c);
                 } catch (IOException ex) {
                     // handle exception...
@@ -108,7 +108,39 @@ public class FieldComponent extends JPanel {
                     if(imageContainer != null)
                         this.remove(imageContainer);
 
-                    imageContainer = new JLabel(new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_FAST)));
+                    imageContainer = new JLabel(new ImageIcon(image.getScaledInstance(60, 60, Image.SCALE_FAST)));
+                    this.add(imageContainer, c);
+                } catch (IOException ex) {
+                    // handle exception...
+                }
+                break;
+            case PLAYER_QUEEN:
+                try {
+                    if(isHost)
+                        image = ImageIO.read(new File(WHITE_QUEEN_PATH));
+                    else
+                        image = ImageIO.read(new File(BLACK_QUEEN_PATH));
+
+                    if(imageContainer != null)
+                        this.remove(imageContainer);
+
+                    imageContainer = new JLabel(new ImageIcon(image.getScaledInstance(60, 60, Image.SCALE_FAST)));
+                    this.add(imageContainer, c);
+                } catch (IOException ex) {
+                    // handle exception...
+                }
+                break;
+            case OPPONENT_QUEEN:
+                try {
+                    if(isHost)
+                        image = ImageIO.read(new File(BLACK_QUEEN_PATH));
+                    else
+                        image = ImageIO.read(new File(WHITE_QUEEN_PATH));
+
+                    if(imageContainer != null)
+                        this.remove(imageContainer);
+
+                    imageContainer = new JLabel(new ImageIcon(image.getScaledInstance(60, 60, Image.SCALE_FAST)));
                     this.add(imageContainer, c);
                 } catch (IOException ex) {
                     // handle exception...

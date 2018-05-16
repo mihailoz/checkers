@@ -228,10 +228,10 @@ public class TurnController {
     }
 
     public boolean isGameOver(){
-        for(int i=1;i<51;i++){
-            if(fields.get(i)==Field.PLAYER_FIGURE || fields.get(i) == Field.PLAYER_QUEEN){
+        for(int i = 1; i < 51; i++){
+            if(fields.get(i) == Field.PLAYER_FIGURE || fields.get(i) == Field.PLAYER_QUEEN) {
                 makePathsForField(i);
-                if(availableFields().size()!=0)
+                if(availableFields().size() != 0)
                     return false;
             }
         }

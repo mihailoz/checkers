@@ -121,10 +121,6 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
                 turnController.choosePath(j);
                 updateBoard(false);
 
-                if(turnController.isGameOver()) {
-                    GameOverDialog god = new GameOverDialog(dialogListener, true, isHost);
-                }
-
                 for(Integer i : this.highlightedFields)
                     blackFields[i].setHighlighted(false);
 
@@ -132,6 +128,11 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
 
                 if(turnController.isTurnOver()) {
                     connectionManager.sendData(DataParser.encodeMove(this.turnController.getBoard()));
+
+                    if(turnController.isGameOver()) {
+                        GameOverDialog god = new GameOverDialog(dialogListener, true, isHost);
+                    }
+
                     turnStarted = false;
                     onTurn = false;
                 } else {

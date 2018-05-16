@@ -3,9 +3,7 @@ package socket;
 import commons.Board;
 import commons.GameStatus;
 import commons.GameType;
-import commons.Move;
 import ui.GameActionListener;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +62,8 @@ public class ConnectionManager extends DataListener {
     public void closeSocket() {
         if(this.type.equals(GameType.HOST)) {
             hostSocket.stopThread();
+        } else {
+            clientSocket.stopThread();
         }
     }
 
@@ -93,8 +93,6 @@ public class ConnectionManager extends DataListener {
         if(type.equals(GameType.JOIN))
             this.sendData(DataParser.encodeNick(this.nickname));
 
-        this.status = GameStatus.STARTED;
-
         for(GameActionListener listener : this.listeners) {
             listener.gameStarted();
         }
@@ -111,8 +109,10 @@ public class ConnectionManager extends DataListener {
     }
 
     @Override
-    public void validatedMoveReceived(boolean b) {
-
+    public void victoryReceived() {
+        for (GameActionListener listener : this.listeners) {
+            listener.victory();
+        }
     }
 
     @Override
@@ -126,10 +126,6 @@ public class ConnectionManager extends DataListener {
 
         // ako nije onda
         // this.sendData(DataParser.encodeValidateMove(false))
-    }
-
-    public GameStatus getStatus() {
-        return this.status;
     }
 
     public String getNickname() {

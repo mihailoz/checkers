@@ -1,10 +1,7 @@
 package ui;
 
-import commons.Board;
 import commons.GameData;
 import commons.GameType;
-import socket.ConnectionManager;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -38,17 +35,7 @@ public class GamePanel extends JPanel {
         this.opponentPanel.setPlayerNick(nick);
     }
 
-    public void setGameData(GameData gameData) {
-        this.gameData = gameData;
-
-        boardPanel.updateBoard(gameData);
-    }
-
-    public void setConnectionManager(ConnectionManager connectionManager) {
-        this.boardPanel.setConnectionManager(connectionManager);
-    }
-
-    public void moveReceived(Board board) {
-        this.boardPanel.moveReceived(board);
+    public BoardPanel getBoardPanel() {
+        return this.boardPanel;
     }
 }

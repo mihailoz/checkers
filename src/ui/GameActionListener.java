@@ -12,5 +12,6 @@ public interface GameActionListener {
     void hostSocketOpened();
     void clientConnected();
     void opponentMoveRecieved(Board board);
+    void victory();
 
 }

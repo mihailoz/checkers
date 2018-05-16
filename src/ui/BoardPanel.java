@@ -88,7 +88,10 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
         }
 
         if(opponentsTurn && turnController.isGameOver()) {
+            connectionManager.sendData(DataParser.encodeVictory());
             GameOverDialog god = new GameOverDialog(dialogListener, false, isHost);
+            god.setLocationRelativeTo(this);
+            god.setVisible(true);
         }
     }
 
@@ -128,11 +131,6 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
 
                 if(turnController.isTurnOver()) {
                     connectionManager.sendData(DataParser.encodeMove(this.turnController.getBoard()));
-
-                    if(turnController.isGameOver()) {
-                        GameOverDialog god = new GameOverDialog(dialogListener, true, isHost);
-                    }
-
                     turnStarted = false;
                     onTurn = false;
                 } else {
@@ -163,5 +161,11 @@ public class BoardPanel extends JPanel implements FieldComponent.FieldListener {
         updateBoard(true);
         System.out.println("Move recieved");
         onTurn = true;
+    }
+
+    public void victory() {
+        GameOverDialog god = new GameOverDialog(dialogListener, true, isHost);
+        god.setLocationRelativeTo(this);
+        god.setVisible(true);
     }
 }

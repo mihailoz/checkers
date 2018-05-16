@@ -11,7 +11,7 @@ public class DataParser {
     private static final int INDEX_CODE = 209;
     public static final int NICKNAME_CODE = INDEX_CODE + 1;
     public static final int MOVE_CODE = INDEX_CODE + 2;
-    public static final int VALIDATED_MOVE_CODE = INDEX_CODE + 3;
+    public static final int VICTORY_CODE = INDEX_CODE + 3;
 
     public static class DecodedData {
         private int code;
@@ -44,12 +44,12 @@ public class DataParser {
         return move.toString();
     }
 
-    public static String encodeNick(String nickname) {
-        return String.valueOf(NICKNAME_CODE) + ";" + nickname;
+    public static String encodeVictory() {
+        return String.valueOf(VICTORY_CODE);
     }
 
-    public static String encodeValidateMove(boolean b) {
-        return String.valueOf(VALIDATED_MOVE_CODE) + ";" + String.valueOf(b);
+    public static String encodeNick(String nickname) {
+        return String.valueOf(NICKNAME_CODE) + ";" + nickname;
     }
 
     public static DecodedData decode(String data) {
@@ -60,8 +60,8 @@ public class DataParser {
                 return new DecodedData(NICKNAME_CODE, data.split(";")[1]);
             case MOVE_CODE:
                 return new DecodedData(MOVE_CODE, decodeMove(data));
-            case VALIDATED_MOVE_CODE:
-                return new DecodedData(VALIDATED_MOVE_CODE, Boolean.parseBoolean(data.split(";")[1]));
+            case VICTORY_CODE:
+                return new DecodedData(VICTORY_CODE, null);
             default:
                 return null;
         }

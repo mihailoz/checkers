@@ -34,6 +34,9 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
 
     @Override
     public void actionPerformed(GameType type, String nick, String host, int port) {
+        if(connectionManager != null)
+            connectionManager.closeSocket();
+
         switch (type) {
             case JOIN:
                 connectionManager = new ConnectionManager(host, port, nick);
@@ -53,8 +56,8 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
 
         if(gamePanel != null) {
             gamePanel.setOpponentNick(nickname);
-            gamePanel.setGameData(gameData);
-            gamePanel.setConnectionManager(connectionManager);
+            gamePanel.getBoardPanel().updateBoard(gameData);
+            gamePanel.getBoardPanel().setConnectionManager(connectionManager);
         }
 
         System.out.println("Our opponent is called: " + nickname);
@@ -89,7 +92,7 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
         if(gameData != null) {
             gamePanel.setPlayerNick(gameData.getPlayerNick());
             gamePanel.setOpponentNick(gameData.getOpponentNick());
-            gamePanel.setGameData(gameData);
+            gamePanel.getBoardPanel().updateBoard(gameData);
         } else {
             gamePanel.setPlayerNick(connectionManager.getNickname());
         }
@@ -128,6 +131,11 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
     public void opponentMoveRecieved(Board board) {
         // Dobili ste protivnicki potez, treba da pomerite figuru po podacimo iz Move argumenta ove funkcije
         // pogledajte move, trebalo bi da ima dovoljno podataka, ako vam treba jos nesto dodajte
-        gamePanel.moveReceived(board);
+        gamePanel.getBoardPanel().moveReceived(board);
+    }
+
+    @Override
+    public void victory() {
+        gamePanel.getBoardPanel().victory();
     }
 }

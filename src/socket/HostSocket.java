@@ -62,7 +62,8 @@ class HostSocket {
     public void stopThread() {
         hostThread.interrupt();
         try {
-            socket.close();
+            if(socket != null)
+                socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

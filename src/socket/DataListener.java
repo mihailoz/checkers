@@ -18,8 +18,8 @@ public abstract class DataListener {
             case DataParser.NICKNAME_CODE:
                 this.nicknameReceived((String) data.getData());
                 break;
-            case DataParser.VALIDATED_MOVE_CODE:
-                this.validatedMoveReceived((boolean) data.getData());
+            case DataParser.VICTORY_CODE:
+                this.victoryReceived();
                 break;
         }
 
@@ -27,7 +27,7 @@ public abstract class DataListener {
 
     public abstract void nicknameReceived(String nickname);
 
-    public abstract void validatedMoveReceived(boolean b);
+    public abstract void victoryReceived();
 
     public abstract void moveReceived(Board moves);
 }

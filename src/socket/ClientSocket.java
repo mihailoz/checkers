@@ -16,6 +16,7 @@ class ClientSocket {
     private String hostname;
 
     private int port;
+    private Thread clientThread;
 
     ClientSocket(String hostname, int port, DataListener listener) {
         this.hostname = hostname;
@@ -42,7 +43,7 @@ class ClientSocket {
         };
 
         try {
-            Thread clientThread = new Thread(clientTask);
+            clientThread = new Thread(clientTask);
             clientThread.start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,5 +59,18 @@ class ClientSocket {
 
         writer.println(data);
         return true;
+    }
+
+    public void stopThread() {
+        if(clientThread != null)
+            clientThread.interrupt();
+
+        if(socket != null) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -44,7 +44,6 @@ public class GameOverDialog extends JDialog implements ActionListener {
         button.addActionListener(this);
         add(button, BorderLayout.SOUTH);
         pack();
-        setVisible(true);
     }
 
     public void actionPerformed(ActionEvent e) {

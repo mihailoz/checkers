@@ -38,13 +38,13 @@ public class TurnController {
         this.board = board;
         this.fields = new ArrayList<Field>(Arrays.asList(board.getFields()));
         if(player.equals("PLAYER")){
-            tableEnd = 9;
+            tableEnd = 0;
             leftCalc = BoardCalculator.getLeftUp2();
             rightCalc = BoardCalculator.getRightUp2();
             direction = 1;
         }
         else{
-            tableEnd = 0;
+            tableEnd = 9;
             direction = -1;
             leftCalc = BoardCalculator.getLeftDown2();
             rightCalc = BoardCalculator.getRightDown2();
@@ -53,6 +53,7 @@ public class TurnController {
 
     //generates paths for the selected checker
     public void makePathsForField(int i){
+        lockdown = false;
         startPosition = i;
         distancePassed = 0;
         longestPath = -1;
@@ -69,6 +70,7 @@ public class TurnController {
                     while(next!=-1 && fields.get(next)==Field.EMPTY){
                         ArrayList<Move> simpleList = new ArrayList<>();
                         simpleList.add(new Move(i, next, -1, fields.get(i)));
+                        longestPath=1;
                         paths.add(simpleList);
                         next = c.getNext(next);
                     }
@@ -175,9 +177,9 @@ public class TurnController {
     //this is kind of it, but it needs to be better
     public List<Integer> availableFields(){
         ArrayList<Integer> list = new ArrayList<>();
-        if(lockdown){
-            return list;
-        }
+//        if(lockdown){
+//            return list;
+//        }
         if(distancePassed<longestPath)
             for(List<Move> l : paths){
                 list.add(l.get(distancePassed).getEndPosition());
@@ -186,7 +188,6 @@ public class TurnController {
     }
 
     public void choosePath(int end){
-        lockdown = true;
         Iterator it = paths.iterator();
         Move m=null;
         while(it.hasNext()){
@@ -197,12 +198,17 @@ public class TurnController {
                 m = l.get(distancePassed);
             }
         }if(m!=null) {
+            if(!lockdown){
+                player = m.getFigure();
+                lockdown = true;
+            }
+
             board.setField(Field.EMPTY, m.getStartPosition());
 
             if(m.getEatenPosition() != -1)
                 board.setField(Field.EMPTY, m.getEatenPosition());
 
-            board.setField(m.getFigure(), m.getEndPosition());
+            board.setField(player, m.getEndPosition());
             if((m.getEndPosition()-1)/5==tableEnd){
                 if(m.getFigure()==Field.PLAYER_FIGURE)
                     board.setField(Field.PLAYER_QUEEN, m.getEndPosition());

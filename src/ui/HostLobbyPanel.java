@@ -14,7 +14,7 @@ public class HostLobbyPanel extends JPanel {
     private JButton confirmBtn;
 
     public HostLobbyPanel() {
-        nickField = new JTextField("MyNickname");
+        nickField = new JTextField("Jedi Master");
         nickField.setMinimumSize(new Dimension(400, 60));
         nickField.setMaximumSize(new Dimension(400, 60));
         portField = new JTextField("8000");
@@ -54,5 +54,11 @@ public class HostLobbyPanel extends JPanel {
     public void addButtonListener(ActionListener listener) {
         if(listener != null)
             this.confirmBtn.addActionListener(listener);
+    }
+
+    public void setEnabledFields(boolean b) {
+        this.confirmBtn.setEnabled(b);
+        this.nickField.setEnabled(b);
+        this.portField.setEnabled(b);
     }
 }

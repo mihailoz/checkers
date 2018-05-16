@@ -15,6 +15,8 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
     private LobbyPanel lobbyPanel;
     private GamePanel gamePanel;
 
+    private WaitDialog waitDialog;
+
     private ConnectionManager connectionManager;
 
     private GameData gameData;
@@ -94,6 +96,16 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
         // Ovde treba prikazati neki dialog koji govori korisnika da saceka da se konektuje neko da bi igrali
         // treba na tom dialog-u da stoji 'cancel' dugme koje cu ja posle povezati da prekine cekanje i vrati
         // korisnika u lobby
+        waitDialog = new WaitDialog(new DialogListener() {
+            @Override
+            public void dialogClosed() {
+                connectionManager.closeSocket();
+                lobbyPanel.setEnabledFields(true);
+            }
+        });
+        waitDialog.setLocationRelativeTo(this.frame);
+        waitDialog.setVisible(true);
+        lobbyPanel.setEnabledFields(false);
     }
 
     @Override
@@ -101,6 +113,8 @@ public class UIController implements LobbyPanel.LobbyListener, GameActionListene
         // Ovde disable-ujete cancel dugme u onom dialogu iz hostSocketOpened() funkcije jer je vec krenuo neko
         // da se konektuje i ne zelimo da prekinemo sad taj postupak konektovanja i razmene informacija
         System.out.println("CLIENT CONNECTED");
+        waitDialog.dispose();
+        lobbyPanel.setEnabledFields(true);
     }
 
     @Override

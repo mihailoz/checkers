@@ -102,6 +102,11 @@ public class LobbyPanel extends JPanel implements ItemListener {
         });
     }
 
+    public void setEnabledFields(boolean b) {
+        this.typeComboBox.setEnabled(b);
+        this.hostPanel.setEnabledFields(b);
+    }
+
     public interface LobbyListener {
         void actionPerformed(GameType type, String nick, String host, int port);
     }

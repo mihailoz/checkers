@@ -17,7 +17,7 @@ public class GuestLobbyPanel extends JPanel {
         hostField = new JTextField("localhost");
         hostField.setMinimumSize(new Dimension(400, 40));
         hostField.setMaximumSize(new Dimension(400, 40));
-        nickField = new JTextField("MyNickname");
+        nickField = new JTextField("The Emperor");
         nickField.setMinimumSize(new Dimension(400, 40));
         nickField.setMaximumSize(new Dimension(400, 40));
         portField = new JTextField("8000");

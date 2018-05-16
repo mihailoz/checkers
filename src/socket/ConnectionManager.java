@@ -61,6 +61,12 @@ public class ConnectionManager extends DataListener {
         }
     }
 
+    public void closeSocket() {
+        if(this.type.equals(GameType.HOST)) {
+            hostSocket.stopThread();
+        }
+    }
+
     public void addListener(GameActionListener listener) {
         for (GameActionListener l : this.listeners) {
             if(l.equals(listener))

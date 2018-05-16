@@ -44,7 +44,7 @@ class HostSocket {
                         listener.dataReceived(data);
                 }
             } catch (IOException ioe) {
-                ioe.printStackTrace();
+                System.out.println("SOCKET CLOSED");
             }
         };
 
@@ -61,6 +61,11 @@ class HostSocket {
 
     public void stopThread() {
         hostThread.interrupt();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean sendData(String data) {
